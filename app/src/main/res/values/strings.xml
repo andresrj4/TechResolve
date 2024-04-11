@@ -1,0 +1,19 @@
+<resources>
+    <!--  Frontpage Login Signup  -->
+    <string name="app_name">Sistema de Tickets</string>
+    <string name="login_title">Acceso</string>
+    <string name="signup_title">Registro</string>
+    <string name="login_signup_email">Correo Electronico:</string>
+    <string name="login_signup_email_hint">correodeusuario@gmail.com</string>
+    <string name="login_signup_password">Contraseña:</string>
+    <string name="login_signup_password_hint">************</string>
+    <string name="login_btn_message">Login</string>
+    <string name="signup_btn_message">Registrarse</string>
+    <string name="signup_name">Nombre:</string>
+    <string name="signup_last_name">Apellidos:</string>
+    <string name="signup_confirm_password">Confirmar Contraseña:</string>
+    <string name="login_signup_message">¿No tiene una cuenta?</string>
+    <string name="login_signup_link_clickable">Crear una cuenta nueva</string>
+    <string name="signup_login_message">¿Ya tiene una cuenta?</string>
+    <string name="signup_login_link_clickable">Acceder</string>
+</resources>
