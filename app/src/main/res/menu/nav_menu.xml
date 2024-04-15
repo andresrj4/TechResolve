@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        android:visible="true" />
+    <item android:title="Tickets"
+        android:id="@+id/tickets"
+        android:icon="@drawable/ic_tickets_ph"/>
+    <item android:title="Notificaciones"
+        android:id="@+id/notificaciones"
+        android:icon="@drawable/ic_notifications"/>
+    <item android:title="Maps"
+        android:id="@+id/maps"
+        android:icon="@drawable/ic_maps"/>
+</menu>

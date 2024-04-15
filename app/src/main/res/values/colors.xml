@@ -6,4 +6,7 @@
     <color name="saffron">#E0B514</color>
     <color name="battleship_grey">#878787</color>
     <color name="jet">#373737</color>
+    <color name="jet_v2">#2B2B2B</color>
+    <color name="night">#161616</color>
+    <color name="french_gray">#AEAEB2</color>
 </resources>
