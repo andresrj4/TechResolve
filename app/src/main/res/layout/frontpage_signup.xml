@@ -6,20 +6,21 @@
     android:layout_height="match_parent"
     tools:context="activities.activity_login">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="45dp"
+            android:paddingBottom="24dp"
             android:fontFamily="@font/inter"
             android:text="@string/signup_title"
             android:textColor="@color/white"
-            android:textSize="11sp"
+            android:textSize="24sp"
             android:textAlignment="center" />
 
         <TextView
@@ -28,22 +29,22 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_name"
             android:textColor="@color/saffron"
-            android:textSize="11sp"
-            android:gravity="center_vertical"
-            android:paddingBottom="2dp" />
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <EditText
+            android:id="@+id/user_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="11sp"
-            android:gravity="fill_vertical"
-            android:paddingTop="11dp"
-            android:background="@drawable/saffron_underline"
+            android:textSize="16sp"
             android:inputType="text"
-            android:id="@+id/user_name_input"/>
+            android:hint="@string/name_hint"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/saffron_underline" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,23 +52,22 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_last_name"
             android:textColor="@color/saffron"
-            android:textSize="11sp"
-            android:gravity="center_vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="2dp" />
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <EditText
+            android:id="@+id/user_last_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="11sp"
-            android:gravity="fill_vertical"
-            android:paddingTop="11dp"
-            android:background="@drawable/saffron_underline"
+            android:textSize="16sp"
             android:inputType="text"
-            android:id="@+id/user_last_name_input"/>
+            android:hint="@string/last_name_hint"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/saffron_underline" />
 
         <TextView
             android:layout_width="match_parent"
@@ -75,10 +75,8 @@
             android:fontFamily="@font/inter"
             android:text="@string/login_signup_email"
             android:textColor="@color/saffron"
-            android:textSize="11sp"
-            android:gravity="center_vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="2dp" />
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <EditText
             android:id="@+id/email_input"
@@ -87,12 +85,15 @@
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="11sp"
+            android:textSize="16sp"
             android:gravity="fill_vertical"
             android:paddingTop="11dp"
             android:background="@drawable/saffron_underline"
             android:inputType="textEmailAddress"
-            android:drawablePadding="8dp" />
+            android:hint="@string/email_hint"
+            android:drawablePadding="8dp"
+            android:focusableInTouchMode="true"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -100,24 +101,23 @@
             android:fontFamily="@font/inter"
             android:text="@string/login_signup_password"
             android:textColor="@color/saffron"
-            android:textSize="11sp"
-            android:gravity="center_vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="2dp" />
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <EditText
+            android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:hint="@string/login_signup_password_hint"
+            android:hint="@string/password_hint"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="11sp"
+            android:textSize="16sp"
             android:gravity="fill_vertical"
             android:paddingTop="11dp"
             android:background="@drawable/saffron_underline"
             android:inputType="textPassword"
-            android:id="@+id/password_input"/>
+            android:drawablePadding="8dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -125,37 +125,46 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_confirm_password"
             android:textColor="@color/saffron"
-            android:textSize="11sp"
-            android:gravity="center_vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="2dp" />
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
 
         <EditText
             android:id="@+id/password_confirmation_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:hint="@string/login_signup_password_hint"
+            android:hint="@string/signup_confirm_password"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="11sp"
-            android:gravity="fill_vertical"
-            android:paddingTop="11dp"
-            android:background="@drawable/saffron_underline"
+            android:textSize="16sp"
             android:inputType="textPassword"
-            android:drawablePadding="8dp" />
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/saffron_underline" />
 
         <Button
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/button_template"
             android:fontFamily="@font/inter"
             android:text="@string/signup_btn_message"
             android:textColor="@color/white"
             app:strokeWidth="1dp"
             android:id="@+id/signup_btn"/>
+
+        <TextView
+            android:id="@+id/password_match_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="@color/saffron"
+            android:visibility="gone"
+            android:text="@string/password_match_message"
+            android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="match_parent"
