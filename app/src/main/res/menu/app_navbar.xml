@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navbar_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/navbar_tickets"
+        android:title="Tickets"
+        android:icon="@drawable/ic_tickets_ph"/>
+    <item
+        android:id="@+id/navbar_notifications"
+        android:title="Notificaciones"
+        android:icon="@drawable/ic_notifications"/>
+    <item
+        android:id="@+id/navbar_maps"
+        android:title="Maps"
+        android:icon="@drawable/ic_maps"/>
+</menu>

@@ -35,6 +35,9 @@ class activity_login : AppCompatActivity() {
             val username = emailInput.text.toString()
             val password = passwordInput.text.toString()
             Log.i("Credentials","Email : $username and Password : $password")
+
+            val intent = Intent(this, activity_home::class.java)
+            startActivity(intent)
         }
 
         val createAccountText = findViewById<TextView>(R.id.login_signup_link)

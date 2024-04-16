@@ -16,4 +16,6 @@
     <string name="login_signup_link_clickable">Crear una cuenta nueva</string>
     <string name="signup_login_message">¿Ya tiene una cuenta?</string>
     <string name="signup_login_link_clickable">Acceder</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
