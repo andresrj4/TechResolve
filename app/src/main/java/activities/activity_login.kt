@@ -36,7 +36,7 @@ class activity_login : AppCompatActivity() {
             val password = passwordInput.text.toString()
             Log.i("Credentials","Email : $username and Password : $password")
 
-            val intent = Intent(this, activity_home::class.java)
+            val intent = Intent(this, activity_app::class.java)
             startActivity(intent)
         }
 

@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name="activities.activity_signup" />
-        <activity android:name="activities.activity_home" />
+        <activity android:name="activities.activity_app" />
 
     </application>
 

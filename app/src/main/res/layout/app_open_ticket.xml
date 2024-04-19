@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_remove"
+        app:tint="@color/white"
+        android:layout_gravity="center|top"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/createText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/inter"
+            android:text="Creación de Ticket"
+            android:padding="8dp"
+            android:textColor="@color/saffron"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"
+            android:textSize="22dp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_box"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="15dp"
+            android:id="@+id/cancelButton"
+            app:tint="@color/saffron"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_open_ticket_title"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/saffron"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Titulo"
+            android:textColor="@color/saffron"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/inter"
+        android:hint="Titulo"
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="11dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:id="@+id/ticket_title_editbox"/>
+
+    <LinearLayout
+        android:id="@+id/layout_open_ticket_description"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/saffron"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textColor="@color/saffron"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/inter"
+        android:hint="Titulo"
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="11dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:id="@+id/ticket_desc_editbox"/>
+
+    <LinearLayout
+        android:id="@+id/layoutLive"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="30dp">
+
+        <Button
+            style="@android:style/Widget.Button"
+            android:id="@+id/enviar_ticket_btn"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginStart="100dp"
+            android:background="@drawable/btn_saffron_outline"
+            android:fontFamily="@font/inter"
+            android:text="Enviar"
+            android:textColor="@color/white"
+            app:strokeWidth="1dp" />
+    </LinearLayout>
+
+</LinearLayout>
