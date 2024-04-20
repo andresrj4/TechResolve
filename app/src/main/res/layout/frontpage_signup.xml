@@ -40,11 +40,13 @@
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
             android:textSize="16sp"
+            android:gravity="fill_vertical"
             android:inputType="text"
             android:hint="@string/name_hint"
             android:drawablePadding="8dp"
             android:padding="12dp"
-            android:background="@drawable/saffron_underline" />
+            android:background="@drawable/saffron_underline"
+            android:autofillHints="" />
 
         <TextView
             android:layout_width="match_parent"
@@ -63,17 +65,19 @@
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
             android:textSize="16sp"
+            android:gravity="fill_vertical"
             android:inputType="text"
             android:hint="@string/last_name_hint"
             android:drawablePadding="8dp"
             android:padding="12dp"
-            android:background="@drawable/saffron_underline" />
+            android:background="@drawable/saffron_underline"
+            android:autofillHints="" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:text="@string/login_signup_email"
+            android:text="@string/signup_email"
             android:textColor="@color/saffron"
             android:textSize="16sp"
             android:layout_marginTop="16dp" />
@@ -93,13 +97,14 @@
             android:hint="@string/email_hint"
             android:drawablePadding="8dp"
             android:focusableInTouchMode="true"
+            android:autofillHints=""
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:text="@string/login_signup_password"
+            android:text="@string/signup_password"
             android:textColor="@color/saffron"
             android:textSize="16sp"
             android:layout_marginTop="16dp" />
@@ -108,16 +113,18 @@
             android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter"
-            android:hint="@string/password_hint"
-            android:textColorHint="@color/battleship_grey"
-            android:textColor="@color/battleship_grey"
-            android:textSize="16sp"
-            android:gravity="fill_vertical"
-            android:paddingTop="11dp"
+            android:autofillHints=""
             android:background="@drawable/saffron_underline"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter"
+            android:gravity="fill_vertical"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
-            android:drawablePadding="8dp" />
+            android:paddingTop="11dp"
+            android:textColor="@color/battleship_grey"
+            android:textColorHint="@color/battleship_grey"
+            android:textSize="16sp"
+            tools:ignore="TextFields" />
 
         <TextView
             android:layout_width="match_parent"
@@ -132,17 +139,21 @@
             android:id="@+id/password_confirmation_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter"
-            android:hint="@string/signup_confirm_password"
-            android:textColorHint="@color/battleship_grey"
-            android:textColor="@color/battleship_grey"
-            android:textSize="16sp"
-            android:inputType="textPassword"
+            android:autofillHints=""
+            android:background="@drawable/saffron_underline"
             android:drawablePadding="8dp"
-            android:padding="12dp"
-            android:background="@drawable/saffron_underline" />
+            android:fontFamily="@font/inter"
+            android:gravity="fill_vertical"
+            android:hint="@string/password_confirm_hint"
+            android:inputType="textPassword"
+            android:paddingTop="12dp"
+            android:textColor="@color/battleship_grey"
+            android:textColorHint="@color/battleship_grey"
+            android:textSize="16sp"
+            tools:ignore="TextFields" />
 
         <Button
+            android:id="@+id/signup_btn"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -151,8 +162,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_btn_message"
             android:textColor="@color/white"
-            app:strokeWidth="1dp"
-            android:id="@+id/signup_btn"/>
+            app:strokeWidth="1dp" />
 
         <TextView
             android:id="@+id/password_match_indicator"

@@ -7,8 +7,8 @@
     <string name="signup_title">Registro</string>
 
     <!-- Field labels -->
-    <string name="login_signup_email">Correo Electrónico:</string>
-    <string name="login_signup_password">Contraseña:</string>
+    <string name="signup_email">Correo Electrónico:</string>
+    <string name="signup_password">Contraseña:</string>
     <string name="signup_name">Nombre:</string>
     <string name="signup_last_name">Apellidos:</string>
     <string name="signup_confirm_password">Confirmar Contraseña:</string>
@@ -18,6 +18,8 @@
     <string name="password_hint">Ingrese su contraseña</string>
     <string name="name_hint">Ingrese su nombre</string>
     <string name="last_name_hint">Ingrese sus apellidos</string>
+    <string name="password_confirm_hint">Confirme Contraseña</string>
+
 
     <!-- Buttons -->
     <string name="login_btn_message">Login</string>

@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "1002662265500",
-    "firebase_url": "https://sistematickets-54d32-default-rtdb.firebaseio.com",
-    "project_id": "sistematickets-54d32",
-    "storage_bucket": "sistematickets-54d32.appspot.com"
+    "project_number": "391224573229",
+    "project_id": "programa-tickets",
+    "storage_bucket": "programa-tickets.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1002662265500:android:53d1b218bdfebb8c436359",
+        "mobilesdk_app_id": "1:391224573229:android:355da34bab35828ddd27a4",
         "android_client_info": {
           "package_name": "com.example.sistema_de_tickets"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC8jwcP2b-D-oHRDtxX1SyOM6EEazHafzM"
+          "current_key": "AIzaSyDkkrlvUrawp_eM0q2Y36oit8lh1lPCqYc"
         }
       ],
       "services": {
