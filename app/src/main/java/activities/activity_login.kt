@@ -40,7 +40,7 @@ class activity_login : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val createAccountText = findViewById<TextView>(R.id.login_signup_link)
+        val createAccountText = findViewById<TextView>(R.id.signup_login_link)
         createAccountText.setOnClickListener {
             val intent = Intent(this, activity_signup::class.java)
             startActivity(intent)

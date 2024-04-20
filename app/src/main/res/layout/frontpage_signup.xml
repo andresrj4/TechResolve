@@ -45,7 +45,7 @@
             android:hint="@string/name_hint"
             android:drawablePadding="8dp"
             android:padding="12dp"
-            android:background="@drawable/saffron_underline"
+            android:background="@drawable/saffron_underline_25dp"
             android:autofillHints="" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:hint="@string/last_name_hint"
             android:drawablePadding="8dp"
             android:padding="12dp"
-            android:background="@drawable/saffron_underline"
+            android:background="@drawable/saffron_underline_25dp"
             android:autofillHints="" />
 
         <TextView
@@ -92,7 +92,7 @@
             android:textSize="16sp"
             android:gravity="fill_vertical"
             android:paddingTop="11dp"
-            android:background="@drawable/saffron_underline"
+            android:background="@drawable/saffron_underline_25dp"
             android:inputType="textEmailAddress"
             android:hint="@string/email_hint"
             android:drawablePadding="8dp"
@@ -114,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:background="@drawable/saffron_underline"
+            android:background="@drawable/saffron_underline_25dp"
             android:drawablePadding="8dp"
             android:fontFamily="@font/inter"
             android:gravity="fill_vertical"
@@ -140,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:background="@drawable/saffron_underline"
+            android:background="@drawable/saffron_underline_25dp"
             android:drawablePadding="8dp"
             android:fontFamily="@font/inter"
             android:gravity="fill_vertical"
@@ -158,7 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/button_template"
+            android:background="@drawable/btn_saffron_outline"
             android:fontFamily="@font/inter"
             android:text="@string/signup_btn_message"
             android:textColor="@color/white"
