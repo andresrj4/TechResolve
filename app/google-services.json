@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "391224573229",
+    "project_id": "programa-tickets",
+    "storage_bucket": "programa-tickets.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391224573229:android:355da34bab35828ddd27a4",
+        "android_client_info": {
+          "package_name": "com.example.sistema_de_tickets"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkkrlvUrawp_eM0q2Y36oit8lh1lPCqYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

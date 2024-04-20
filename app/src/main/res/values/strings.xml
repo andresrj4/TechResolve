@@ -1,23 +1,36 @@
 <resources>
-    <!--  Frontpage Login Signup  -->
+    <!-- App Strings -->
     <string name="app_name">Sistema de Tickets</string>
+
+    <!-- Titles -->
     <string name="login_title">Acceso</string>
     <string name="signup_title">Registro</string>
-    <string name="login_signup_email">Correo Electronico:</string>
-    <string name="login_signup_email_hint">correodeusuario@gmail.com</string>
-    <string name="login_signup_password">Contraseña:</string>
-    <string name="login_signup_password_hint">************</string>
-    <string name="login_btn_message">Login</string>
-    <string name="signup_btn_message">Registrarse</string>
+
+    <!-- Field labels -->
+    <string name="signup_email">Correo Electrónico:</string>
+    <string name="signup_password">Contraseña:</string>
     <string name="signup_name">Nombre:</string>
     <string name="signup_last_name">Apellidos:</string>
     <string name="signup_confirm_password">Confirmar Contraseña:</string>
+
+    <!-- Hints -->
+    <string name="email_hint">Ingrese su correo electrónico</string>
+    <string name="password_hint">Ingrese su contraseña</string>
+    <string name="name_hint">Ingrese su nombre</string>
+    <string name="last_name_hint">Ingrese sus apellidos</string>
+    <string name="password_confirm_hint">Confirme Contraseña</string>
+
+
+    <!-- Buttons -->
+    <string name="login_btn_message">Login</string>
+    <string name="signup_btn_message">Registrarse</string>
+
+    <!-- Link prompts -->
     <string name="login_signup_message">¿No tiene una cuenta?</string>
     <string name="login_signup_link_clickable">Crear una cuenta nueva</string>
     <string name="signup_login_message">¿Ya tiene una cuenta?</string>
     <string name="signup_login_link_clickable">Acceder</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="open_nav">Open Navigation Drawer</string>
-    <string name="close_nav">Close Navigation Drawer</string>
+
+    <!-- Validation messages -->
+    <string name="password_match_message">Las contraseñas coinciden</string>
 </resources>
