@@ -43,7 +43,7 @@
             android:paddingTop="11dp"
             android:background="@drawable/saffron_underline_25dp"
             android:inputType="textEmailAddress"
-            android:id="@+id/east"/>
+            android:id="@+id/emailinput_login"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
             android:paddingTop="11dp"
             android:background="@drawable/saffron_underline_25dp"
             android:inputType="textPassword"
-            android:id="@+id/pas"/>
+            android:id="@+id/passwordinput_login"/>
 
         <Button
             style="@android:style/Widget.Button"
