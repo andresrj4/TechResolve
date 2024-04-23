@@ -10,6 +10,10 @@
         android:title="Tickets"
         android:icon="@drawable/ic_tickets_ph"/>
     <item
+        android:id="@+id/navbar_work"
+        android:icon="@drawable/ic_briefcase"
+        android:title="Mi Trabajo" />
+    <item
         android:id="@+id/navbar_notifications"
         android:title="Notificaciones"
         android:icon="@drawable/ic_notifications"/>

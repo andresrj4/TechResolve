@@ -1,12 +1,12 @@
 package activities
 
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.view.Window
@@ -25,6 +25,12 @@ import androidx.appcompat.widget.Toolbar
 import com.example.sistema_de_tickets.databinding.AppMainBinding
 import com.google.android.material.navigation.NavigationView
 import android.content.Intent
+import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,7 +53,9 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuIcon = findViewById(R.id.toolbar_menuIcon)
         setSupportActionBar(toolbar)
 
-
+        updateUserName()
+        initializeUI()
+        fetchUserRoleAndSetupNavigation()
 
         val navigationView : NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
@@ -85,8 +93,9 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     replaceFragment(Home())
                     true
                 }
-                R.id.navbar_tickets -> {
-                    replaceFragment(Tickets())
+                R.id.navbar_tickets, R.id.navbar_work -> {
+                    val fragment = if (item.itemId == R.id.navbar_tickets) Tickets() else MyWork()
+                    replaceFragment(fragment)
                     true
                 }
                 R.id.navbar_notifications -> {
@@ -121,10 +130,18 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
+    private fun initializeUI() {
+        setSupportActionBar(toolbar)
+    }
+    private fun setupNavigation(role: String?) {
+        binding.navbarPanel.menu.apply {
+            findItem(R.id.navbar_tickets).isVisible = role == "Cliente"
+            findItem(R.id.navbar_work).isVisible = role == "Empleado"
+        }
+    }
 
     override fun onBackPressed(){
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -134,12 +151,58 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun fetchUserRoleAndSetupNavigation() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let {
+            val database = FirebaseDatabase.getInstance()
+            val userRef = database.getReference("Users").child(it)
+
+            userRef.child("role").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val role = snapshot.value as String?
+                    setupNavigation(role)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("Firebase", "Failed to fetch user role", error.toException())
+                }
+            })
+        }
+    }
+
     private fun replaceFragment(fragment: Fragment) {
         Log.d("FragmentTransaction", "Replacing fragment with ${fragment::class.java.simpleName}")
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun updateUserName() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            val userId = user.uid
+            val database = FirebaseDatabase.getInstance()
+            val userRef = database.getReference("Users").child(userId)
+
+            // Attach a listener to read the data at our user reference
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val name = snapshot.child("name").value.toString()  // Getting the name
+                    val lastName = snapshot.child("lastName").value.toString()  // Getting the last name
+
+                    // Update the TextView, combining name and last name
+                    val userNameTextView = findViewById<TextView>(R.id.toolbar_username)
+                    userNameTextView.text = "$name $lastName"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.w(TAG, "loadUser:onCancelled", databaseError.toException())
+                    Toast.makeText(baseContext, "Failed to load user.",
+                        Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 
     private fun showBottomDialog() {
@@ -160,7 +223,7 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimationBottomToCenter
         dialog.window?.setGravity(Gravity.BOTTOM)
     }
 }

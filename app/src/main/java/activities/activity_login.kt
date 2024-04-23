@@ -1,6 +1,8 @@
 package activities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,10 +10,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sistema_de_tickets.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class activity_login : AppCompatActivity() {
@@ -74,15 +81,77 @@ class activity_login : AppCompatActivity() {
                 }
             }
     }
+
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            // Navigate to Home Activity
-            startActivity(Intent(this, activity_app::class.java))
-            finish()
+            val database = FirebaseDatabase.getInstance()
+            val userId = user.uid
+            val userRef = database.getReference("Users").child(userId)
+
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists() && snapshot.hasChild("role") && snapshot.child("role").value != null) {
+                        val role = snapshot.child("role").value.toString()
+                        // Redirect to main activity with user role
+                        startActivity(Intent(this@activity_login, activity_app::class.java))
+                        finish()
+                    } else {
+                        // Prompt for role selection
+                        promptForRoleSelection(userId)
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(baseContext, "Failed to load user role.", Toast.LENGTH_SHORT).show()
+                }
+            })
         } else {
             // Optionally clear input fields
             emailInput_login.text.clear()
             passwordInput_login.text.clear()
+        }
+    }
+
+    private fun promptForRoleSelection(userId: String) {
+        val dialogView = layoutInflater.inflate(R.layout.frontpage_role_selection, null)
+        val builder = AlertDialog.Builder(this, R.style.DialogAnimationFadeIn)
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+
+        val dialog = builder.create()
+
+        // Setup buttons and other interactive elements
+        dialogView.findViewById<Button>(R.id.client_btn).setOnClickListener {
+            saveUserRole(userId, "Cliente")
+            dialog.dismiss()
+        }
+        dialogView.findViewById<Button>(R.id.employee_btn).setOnClickListener {
+            saveUserRole(userId, "Empleado")
+            dialog.dismiss()
+        }
+
+        dialog.setOnCancelListener {
+            Toast.makeText(this, "You must select a role to continue.", Toast.LENGTH_LONG).show()
+            dialog.dismiss()  // Close the current dialog before showing it again
+            promptForRoleSelection(userId)  // Optionally re-prompt if no selection is made
+        }
+
+        dialog.show()
+    }
+
+
+    private fun saveUserRole(userId: String, role: String) {
+        val database = FirebaseDatabase.getInstance()
+        val userRef = database.getReference("Users").child(userId)
+
+        userRef.child("role").setValue(role).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Role set successfully, redirect to the main activity
+                startActivity(Intent(this, activity_app::class.java))
+                finish()
+            } else {
+                Toast.makeText(this, "Failed to set role, try again.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

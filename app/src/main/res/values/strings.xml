@@ -16,7 +16,6 @@
     <string name="emailinput_login">Email:</string>
 
 
-
     <!-- Hints -->
     <string name="email_hint">Ingrese su correo electrónico</string>
     <string name="password_hint">Ingrese su contraseña</string>

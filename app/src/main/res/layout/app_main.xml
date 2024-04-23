@@ -104,7 +104,7 @@
             android:id="@+id/navbar_panel"
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            app:menu="@menu/app_navbar"
+            app:menu="@menu/menu_navbar"
             app:itemIconTint="@drawable/app_navbar_tab_color"
             app:itemPaddingTop="20dp"
             app:itemPaddingBottom="20dp"
@@ -126,7 +126,7 @@
         android:id="@+id/nav_view"
         android:layout_gravity="start"
         app:headerLayout="@layout/toolbar_menu_header"
-        app:menu="@menu/app_toolbar"
+        app:menu="@menu/menu_toolbar"
         app:itemIconTint="@color/french_gray"
         app:itemTextColor="@color/french_gray">
     </com.google.android.material.navigation.NavigationView>
