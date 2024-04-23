@@ -28,7 +28,6 @@ import android.content.Intent
 
 class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
     private lateinit var drawerLayout : DrawerLayout
     private lateinit var binding: AppMainBinding
     private lateinit var dotsIcon: ImageView
@@ -43,33 +42,28 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout = findViewById(R.id.drawer_layout)
         addTicketBtn = findViewById(R.id.btn_add_ticket)
-        toolbar = findViewById(R.id.toolbar_panel)
+        toolbar = findViewById(R.id.main_toolbar)
+        dotsIcon = findViewById(R.id.toolbar_dotIcon)
+        menuIcon = findViewById(R.id.toolbar_menuIcon)
         setSupportActionBar(toolbar)
 
 
-        val addTicketButton : Button = findViewById(R.id.btn_add_ticket)
+
         val navigationView : NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
-        )
-
-        addTicketButton.setOnClickListener {
-            val dialog = Dialog(this)
-            dialog.setContentView(R.layout.app_open_ticket)
-            dialog.show()
+        ).apply {
+            isDrawerIndicatorEnabled = false  // Disable the default icon
+            syncState()
         }
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
         addTicketBtn.setOnClickListener {
             showBottomDialog()
         }
-
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        dotsIcon = findViewById(R.id.toolbar_dotIcon)
-        menuIcon = findViewById(R.id.toolbar_menuIcon)
 
         menuIcon.setOnClickListener {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -110,27 +104,25 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.app_toolbar, menu)
-        return true
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.toolbar_settings -> {
-                Log.d("MenuItemClicked", "Item ID: ${item.itemId}")
+        Log.d("NavigationItem", "Clicked item: ${item.title}")
+        drawerLayout.closeDrawer(GravityCompat.START)
+        when (item.itemId) {
+            R.id.toolbar_menu_settings -> {
                 replaceFragment(Settings())
-                true
+                return true
             }
-            R.id.toolbar_logout -> {
-                Log.d("MenuItemClicked", "Item ID: ${item.itemId}")
+            R.id.toolbar_menu_logout -> {
                 val intent = Intent(this, activity_login::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears the activity stack
                 startActivity(intent)
                 Toast.makeText(this, "Cierre de sesión exitoso", Toast.LENGTH_SHORT).show()
-                true
+                finish()  // Ensure the current activity is closed
+                return true
             }
-            else -> super.onOptionsItemSelected(item)
         }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 
 
@@ -138,7 +130,7 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            super.onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -149,6 +141,7 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
     }
+
     private fun showBottomDialog() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

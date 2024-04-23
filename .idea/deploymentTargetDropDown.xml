@@ -2,9 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="activity_signup">
-        <State />
-      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -13,12 +10,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="$USER_HOME$/.android/avd/Pixel_8_API_VanillaIceCream.avd" />
+                  <value value="C:\Users\DELL\.android\avd\Pixel_8_API_26.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-16T23:10:24.515298Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-23T21:49:34.535545800Z" />
         </State>
       </entry>
     </value>

@@ -44,14 +44,15 @@ class activity_login : AppCompatActivity() {
             val password = passwordInput_login.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Email and password must not be empty.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Correo y contraseña estan vacios", Toast.LENGTH_SHORT).show()
             } else {
                 loginUser(email, password)
             }
         }
 
-        val createAccountText = findViewById<TextView>(R.id.signup_login_link)
+        val createAccountText = findViewById<TextView>(R.id.login_signup_link_text)
         createAccountText.setOnClickListener {
+            // Start signup activity without finishing this one
             startActivity(Intent(this, activity_signup::class.java))
         }
     }
@@ -67,7 +68,7 @@ class activity_login : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("LoginActivity", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}",
+                    Toast.makeText(baseContext, "Error: ${task.exception?.message}",
                         Toast.LENGTH_SHORT).show()
                     updateUI(null)
                 }
@@ -84,5 +85,4 @@ class activity_login : AppCompatActivity() {
             passwordInput_login.text.clear()
         }
     }
-
 }

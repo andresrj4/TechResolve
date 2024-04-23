@@ -68,9 +68,9 @@ class activity_signup : AppCompatActivity() {
             }
         }
 
-        val signupLoginLink = findViewById<TextView>(R.id.signup_login_link)
+        val signupLoginLink = findViewById<TextView>(R.id.signup_login_link_text)
         signupLoginLink.setOnClickListener {
-            startActivity(Intent(this, activity_login::class.java))
+            // Finish this activity to reveal the login activity underneath in the stack
             finish()
         }
     }
@@ -78,23 +78,23 @@ class activity_signup : AppCompatActivity() {
     private fun validateInputs(name: String, lastName: String, email: String, password: String, confirmPassword: String): Boolean {
         var isValid = true
         if (name.isEmpty()) {
-            nameInput.error = "Name is required"
+            nameInput.error = "Nombre requerido"
             isValid = false
         }
         if (lastName.isEmpty()) {
-            lastNameInput.error = "Last name is required"
+            lastNameInput.error = "Apellidos requeridos"
             isValid = false
         }
         if (email.isEmpty()) {
-            emailInput.error = "Email is required"
+            emailInput.error = "Correo requerido"
             isValid = false
         }
         if (password.isEmpty()) {
-            passwordInput.error = "Password is required"
+            passwordInput.error = "Contraseña requerida"
             isValid = false
         }
         if (confirmPassword.isEmpty() || password != confirmPassword) {
-            confirmPasswordInput.error = "Passwords do not match"
+            confirmPasswordInput.error = "Las contraseñas con coinciden"
             isValid = false
         }
         return isValid
@@ -107,17 +107,17 @@ class activity_signup : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
-                        Toast.makeText(this, "User registered successfully!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Registro de usuario exitoso!", Toast.LENGTH_LONG).show()
                         saveUserDetails(user, name, lastName)
                     } else {
                         task.exception?.let {
                             Log.w(TAG, "createUserWithEmail:failure", it)
-                            Toast.makeText(baseContext, "Authentication failed: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(baseContext, "Error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
         } catch (e: Exception) {
-            Log.e(TAG, "Registration error: ${e.localizedMessage}")
+            Log.e(TAG, "Error de registro: ${e.localizedMessage}")
             Toast.makeText(this, "Failed to register due to an unexpected error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }

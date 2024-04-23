@@ -102,6 +102,6 @@
             android:textSize="15sp"
             android:textAlignment="center"
             android:clickable="true"
-            android:id="@+id/signup_login_link"/>
+            android:id="@+id/login_signup_link_text"/>
     </LinearLayout>
 </RelativeLayout>
