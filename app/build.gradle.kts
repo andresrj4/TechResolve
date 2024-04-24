@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.gms.google-services") // Asegúrate de que esta es la única instancia del plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -14,7 +14,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,7 +28,6 @@ android {
     }
 
     buildFeatures {
-        //noinspection DataBindingWithoutKapt
         viewBinding = true
     }
 
@@ -57,13 +55,7 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.database.ktx)
-
-    //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-analytics-ktx")
-
-    //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-database-ktx")
-
-    //noinspection UseTomlInstead
-    implementation("com.google.firebase:firebase-auth-ktx") // Agrega Firebase Authentication con extensiones de Kotlin
+    implementation("com.google.firebase:firebase-auth-ktx")
 }

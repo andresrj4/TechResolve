@@ -1,60 +1,101 @@
 package activities
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.sistema_de_tickets.R
+import androidx.fragment.app.Fragment
+import com.example.sistema_de_tickets.databinding.FragmentTicketsBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+data class Ticket(
+    val title: String = "",
+    val description: String = "",
+    val dateCreated: Long = 0L,
+    var dateClosed: Long? = null,
+    val clientID: String = "",
+    val resolutionSteps: MutableList<String> = mutableListOf(),
+    var status: TicketStatus = TicketStatus.OPEN,
+    val materialsUsed: MutableList<String> = mutableListOf(),
+    var note: String = "",
+    val history: MutableList<String> = mutableListOf()
+)
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Tickets.newInstance] factory method to
- * create an instance of this fragment.
- */
+enum class TicketStatus {
+    OPEN,
+    CLOSED,
+    PENDING,
+    IN_PROGRESS
+}
+
 class Tickets : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentTicketsBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        db = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tickets, container, false)
+        _binding = FragmentTicketsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Tickets.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Tickets().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.btn_Add_Ticket.setOnClickListener {
+            createTicket("Sample Ticket", "This is a sample description.")
+        }
+        loadTickets()
+    }
+
+    private fun loadTickets() {
+        db.collection("tickets").get()
+            .addOnSuccessListener { result ->
+                val ticketsList = ArrayList<Ticket>()
+                for (document in result) {
+                    try {
+                        val ticket = document.toObject(Ticket::class.java)
+                        ticketsList.add(ticket)
+                    } catch (e: Exception) {
+                        Log.e("TicketsFragment", "Error converting document", e)
+                    }
                 }
+                // Aquí podrías actualizar tu RecyclerView o cualquier otro elemento de la UI con ticketsList
             }
+            .addOnFailureListener { exception ->
+                Log.w("TicketsFragment", "Error getting documents: ", exception)
+            }
+    }
+
+
+    private fun createTicket(title: String, description: String) {
+        val newTicket = Ticket(
+            title = title,
+            description = description,
+            dateCreated = System.currentTimeMillis(),
+            clientID = "someClientId"
+        )
+
+        db.collection("tickets").add(newTicket)
+            .addOnSuccessListener {
+                Log.d("TicketsFragment", "Ticket added with ID: ${it.id}")
+                // Refresh the list of tickets or show success message
+            }
+            .addOnFailureListener { e ->
+                Log.w("TicketsFragment", "Error adding ticket", e)
+                // Show error message to the user
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
