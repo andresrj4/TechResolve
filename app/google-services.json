@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "391224573229",
+    "firebase_url": "https://programa-tickets-default-rtdb.firebaseio.com",
     "project_id": "programa-tickets",
     "storage_bucket": "programa-tickets.appspot.com"
   },

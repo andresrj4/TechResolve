@@ -2,17 +2,12 @@ package activities
 
 import android.app.Dialog
 import android.content.ContentValues.TAG
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -25,14 +20,21 @@ import androidx.appcompat.widget.Toolbar
 import com.example.sistema_de_tickets.databinding.AppMainBinding
 import com.google.android.material.navigation.NavigationView
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout : DrawerLayout
     private lateinit var binding: AppMainBinding
@@ -40,9 +42,11 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var menuIcon: ImageView
     private lateinit var toolbar: Toolbar
     private lateinit var addTicketBtn : Button
+    private lateinit var viewModel: TicketViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(TicketViewModel::class.java)
         binding = AppMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -57,6 +61,9 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         initializeUI()
         fetchUserRoleAndSetupNavigation()
 
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
+
         val navigationView : NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
@@ -70,7 +77,7 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         addTicketBtn.setOnClickListener {
-            showBottomDialog()
+            showTicketCreationForm()
         }
 
         menuIcon.setOnClickListener {
@@ -122,7 +129,7 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.toolbar_menu_logout -> {
-                val intent = Intent(this, activity_login::class.java)
+                val intent = Intent(this, ActivityLogin::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears the activity stack
                 startActivity(intent)
                 Toast.makeText(this, "Cierre de sesión exitoso", Toast.LENGTH_SHORT).show()
@@ -205,21 +212,30 @@ class activity_app : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun showBottomDialog() {
+    private fun showTicketCreationForm() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.app_open_ticket)
 
-        val ticketTitle = dialog.findViewById<LinearLayout>(R.id.layout_open_ticket_title)
-        val ticketDescription = dialog.findViewById<LinearLayout>(R.id.layout_open_ticket_description)
-        val sendTicketBtn = dialog.findViewById<AppCompatButton>(R.id.enviar_ticket_btn)
+        // Correctly find EditText by ID and cast them properly
+        val ticketTitleEditText = dialog.findViewById<EditText>(R.id.ticket_title_editbox)
+        val ticketDescriptionEditText = dialog.findViewById<EditText>(R.id.ticket_desc_editbox)
+        val sendTicketBtn = dialog.findViewById<AppCompatButton>(R.id.submit_ticket_btn)
 
+        val viewModel = ViewModelProvider(this).get(TicketViewModel::class.java)
 
         sendTicketBtn.setOnClickListener {
-            dialog.dismiss()
-            Toast.makeText(this, "Ticket enviado exitosamente", Toast.LENGTH_SHORT).show()
+            val title = ticketTitleEditText.text.toString().trim()
+            val description = ticketDescriptionEditText.text.toString().trim()
+            if (title.isNotEmpty() && description.isNotEmpty()) {
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                viewModel.submitTicket(title, description, userId)
+                dialog.dismiss()
+                Toast.makeText(this, "Ticket enviado exitosamente", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Por favor, complete todos los campos antes de enviar.", Toast.LENGTH_SHORT).show()
+            }
         }
-
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

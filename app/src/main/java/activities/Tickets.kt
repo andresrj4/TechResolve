@@ -1,101 +1,70 @@
 package activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.sistema_de_tickets.databinding.FragmentTicketsBinding
-import com.google.firebase.firestore.FirebaseFirestore
-
-data class Ticket(
-    val title: String = "",
-    val description: String = "",
-    val dateCreated: Long = 0L,
-    var dateClosed: Long? = null,
-    val clientID: String = "",
-    val resolutionSteps: MutableList<String> = mutableListOf(),
-    var status: TicketStatus = TicketStatus.OPEN,
-    val materialsUsed: MutableList<String> = mutableListOf(),
-    var note: String = "",
-    val history: MutableList<String> = mutableListOf()
-)
-
-enum class TicketStatus {
-    OPEN,
-    CLOSED,
-    PENDING,
-    IN_PROGRESS
-}
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.sistema_de_tickets.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Source
+import model.Ticket
 
 class Tickets : Fragment() {
-    private var _binding: FragmentTicketsBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var db: FirebaseFirestore
+    private lateinit var ticketsAdapter: TicketsAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: TicketViewModel
+    private var currentSort = TicketViewModel.SortBy.DATE
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        db = FirebaseFirestore.getInstance()
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_tickets, container, false)
+        recyclerView = view.findViewById(R.id.client_ticket_recycle_viewer)
+        recyclerView.layoutManager = LinearLayoutManager(context)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentTicketsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.btn_Add_Ticket.setOnClickListener {
-            createTicket("Sample Ticket", "This is a sample description.")
+        // Initialize the adapter with an empty list before any LiveData setup
+        ticketsAdapter = TicketsAdapter(mutableListOf()) { ticket ->
+            navigateToTicketDetail(ticket)
         }
-        loadTickets()
+        recyclerView.adapter = ticketsAdapter
+
+        setupViewModel()
+        return view
     }
 
-    private fun loadTickets() {
-        db.collection("tickets").get()
-            .addOnSuccessListener { result ->
-                val ticketsList = ArrayList<Ticket>()
-                for (document in result) {
-                    try {
-                        val ticket = document.toObject(Ticket::class.java)
-                        ticketsList.add(ticket)
-                    } catch (e: Exception) {
-                        Log.e("TicketsFragment", "Error converting document", e)
-                    }
-                }
-                // Aquí podrías actualizar tu RecyclerView o cualquier otro elemento de la UI con ticketsList
-            }
-            .addOnFailureListener { exception ->
-                Log.w("TicketsFragment", "Error getting documents: ", exception)
-            }
+    private fun toggleSortOrder() {
+        currentSort = if (currentSort == TicketViewModel.SortBy.DATE) {
+            TicketViewModel.SortBy.STATUS
+        } else {
+            TicketViewModel.SortBy.DATE
+        }
+        viewModel.loadClientTickets(FirebaseAuth.getInstance().currentUser?.uid ?: "", currentSort)
+        updateSortHeader()
     }
 
-
-    private fun createTicket(title: String, description: String) {
-        val newTicket = Ticket(
-            title = title,
-            description = description,
-            dateCreated = System.currentTimeMillis(),
-            clientID = "someClientId"
-        )
-
-        db.collection("tickets").add(newTicket)
-            .addOnSuccessListener {
-                Log.d("TicketsFragment", "Ticket added with ID: ${it.id}")
-                // Refresh the list of tickets or show success message
-            }
-            .addOnFailureListener { e ->
-                Log.w("TicketsFragment", "Error adding ticket", e)
-                // Show error message to the user
-            }
+    private fun updateSortHeader() {
+        val headerView = view?.findViewById<TextView>(R.id.client_sort_header)
+        headerView?.text = if (currentSort == TicketViewModel.SortBy.DATE) "Sort by Date" else "Sort by Status"
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(requireActivity()).get(TicketViewModel::class.java)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        viewModel.loadClientTickets(userId, currentSort, Source.SERVER)  // Fetch from server to ensure data is fresh
+        viewModel.ticketsLiveData.observe(viewLifecycleOwner) { tickets ->
+            val mutableTickets = tickets.toMutableList()
+            ticketsAdapter.updateData(mutableTickets)  // Update the data in the existing adapter
+            if (tickets.isEmpty()) {
+                Toast.makeText(context, "No tickets available", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun navigateToTicketDetail(ticket: Ticket) {
+        // Implementation of navigation to the ticket detail fragment or activity
     }
 }

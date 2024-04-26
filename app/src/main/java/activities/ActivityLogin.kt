@@ -1,8 +1,6 @@
 package activities
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class activity_login : AppCompatActivity() {
+class ActivityLogin : AppCompatActivity() {
     private lateinit var loginContent: View
     private lateinit var signupContent: View
     private lateinit var auth: FirebaseAuth
@@ -60,7 +58,7 @@ class activity_login : AppCompatActivity() {
         val createAccountText = findViewById<TextView>(R.id.login_signup_link_text)
         createAccountText.setOnClickListener {
             // Start signup activity without finishing this one
-            startActivity(Intent(this, activity_signup::class.java))
+            startActivity(Intent(this, ActivitySignup::class.java))
         }
     }
 
@@ -93,7 +91,7 @@ class activity_login : AppCompatActivity() {
                     if (snapshot.exists() && snapshot.hasChild("role") && snapshot.child("role").value != null) {
                         val role = snapshot.child("role").value.toString()
                         // Redirect to main activity with user role
-                        startActivity(Intent(this@activity_login, activity_app::class.java))
+                        startActivity(Intent(this@ActivityLogin, ActivityApp::class.java))
                         finish()
                     } else {
                         // Prompt for role selection
@@ -139,7 +137,6 @@ class activity_login : AppCompatActivity() {
         dialog.show()
     }
 
-
     private fun saveUserRole(userId: String, role: String) {
         val database = FirebaseDatabase.getInstance()
         val userRef = database.getReference("Users").child(userId)
@@ -147,7 +144,7 @@ class activity_login : AppCompatActivity() {
         userRef.child("role").setValue(role).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // Role set successfully, redirect to the main activity
-                startActivity(Intent(this, activity_app::class.java))
+                startActivity(Intent(this, ActivityApp::class.java))
                 finish()
             } else {
                 Toast.makeText(this, "Failed to set role, try again.", Toast.LENGTH_SHORT).show()

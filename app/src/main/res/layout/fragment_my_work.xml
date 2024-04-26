@@ -1,17 +1,43 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="activities.MyWork">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Expandable layout for Open Tickets -->
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/employee_open_tickets_sort_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mi Trabajo"
-        android:textColor="@color/white"
-        android:textAppearance="@font/inter"
-        android:textSize="30sp"
-        android:layout_gravity="center"/>
+        android:text="Tickets Abiertos"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/employee_open_tickets_recycle_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Expandable layout for Your Tickets -->
+    <TextView
+        android:id="@+id/employee_in_process_tickets_sort_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tus Tickets"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/employee_assigned_tickets_recycle_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>

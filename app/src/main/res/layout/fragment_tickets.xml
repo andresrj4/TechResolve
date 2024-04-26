@@ -1,17 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="activities.Tickets">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/client_sort_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tickets Fragment"
-        android:textAppearance="@font/inter"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:layout_gravity="center"/>
+        android:text="Sort By"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/client_ticket_recycle_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

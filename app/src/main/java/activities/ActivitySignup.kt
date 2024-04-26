@@ -1,6 +1,5 @@
 package activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -14,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import android.util.Log
 
-class activity_signup : AppCompatActivity() {
+class ActivitySignup : AppCompatActivity() {
     companion object {
         private const val TAG = "activity_signup"
     }

@@ -69,6 +69,7 @@
     </LinearLayout>
 
     <EditText
+
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginEnd="20dp"
@@ -133,7 +134,7 @@
 
         <Button
             style="@android:style/Widget.Button"
-            android:id="@+id/enviar_ticket_btn"
+            android:id="@+id/submit_ticket_btn"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="30dp"
