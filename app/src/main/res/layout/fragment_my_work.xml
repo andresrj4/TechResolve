@@ -7,30 +7,36 @@
 
     <!-- Expandable layout for Open Tickets -->
     <TextView
-        android:id="@+id/employee_open_tickets_sort_header"
+        android:id="@+id/employee_available_tickets_sort_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tickets Abiertos"
         android:padding="10dp"
-        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:fontFamily="@font/inter"
+        android:textStyle="bold"
+        android:textColor="@color/french_gray"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/employee_open_tickets_recycle_viewer"
+        android:id="@+id/employee_available_tickets_recycle_viewer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
     <!-- Expandable layout for Your Tickets -->
     <TextView
-        android:id="@+id/employee_in_process_tickets_sort_header"
+        android:id="@+id/employee_assigned_tickets_sort_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tus Tickets"
+        android:gravity="center"
         android:padding="10dp"
-        android:textColor="@android:color/white"
+        android:fontFamily="@font/inter"
+        android:textStyle="bold"
+        android:textColor="@color/french_gray"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true" />

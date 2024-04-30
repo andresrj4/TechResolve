@@ -1,13 +1,113 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/ticket_bg_open"
+    android:padding="20dp"
     tools:context="activities.ClientTicketDetails">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/client_ticket_details_header_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-</FrameLayout>
+            <TextView
+                android:id="@+id/client_ticket_details_ticketID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_weight="1"
+                android:text="Ticket ID"
+                android:textColor="@color/french_gray"
+                android:fontFamily="@font/inter"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/client_ticket_details_ticket_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Estado"
+                android:fontFamily="@font/inter"
+                android:textColor="#FF0000"
+                android:layout_alignParentEnd="true"/>
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/client_ticket_details_ticket_title"
+            android:layout_below="@id/client_ticket_details_header_layout"
+            android:paddingTop="10dp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Titulo"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/client_ticket_details_ticket_description"
+            android:layout_below="@id/client_ticket_details_ticket_title"
+            android:paddingTop="10dp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/client_ticket_details_employee_assigned"
+            android:layout_below="@id/client_ticket_details_ticket_description"
+            android:paddingTop="20dp"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/french_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empleado"
+            android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/client_ticket_details_materials_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_saffron_outline_2"
+                android:fontFamily="@font/inter"
+                android:clickable="true"
+                android:text="Materiales"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/client_ticket_details_history_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_saffron_outline_2"
+                android:fontFamily="@font/inter"
+                android:clickable="true"
+                android:text="Historial"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/client_ticket_details_close_ticket_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_saffron_outline_2"
+                android:fontFamily="@font/inter"
+                android:clickable="true"
+                android:text="Cerrar Ticket"
+                android:textAllCaps="false" />
+    </LinearLayout>
+</RelativeLayout>

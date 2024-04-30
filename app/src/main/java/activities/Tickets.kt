@@ -16,7 +16,7 @@ import com.google.firebase.firestore.Source
 import model.Ticket
 
 class Tickets : Fragment() {
-    private lateinit var ticketsAdapter: TicketsAdapter
+    private lateinit var ticketsAdapter: TicketAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: TicketViewModel
     private var currentSort = TicketViewModel.SortBy.DATE
@@ -26,15 +26,22 @@ class Tickets : Fragment() {
         recyclerView = view.findViewById(R.id.client_ticket_recycle_viewer)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        // Initialize the adapter with an empty list before any LiveData setup
-        ticketsAdapter = TicketsAdapter(mutableListOf()) { ticket ->
-            navigateToTicketDetail(ticket)
-        }
+        val isEmployee = UserManager.getInstance().isEmployee()
+
+        ticketsAdapter = TicketAdapter(mutableListOf(), isEmployee,
+            onItemClick = { ticket ->
+                // Handle general item click
+            },
+            onDetailsClick = { ticket ->
+                navigateToTicketDetail(ticket, isEmployee) // Navigate to details using the details button specifically
+            }
+        )
         recyclerView.adapter = ticketsAdapter
 
         setupViewModel()
         return view
     }
+
 
     private fun toggleSortOrder() {
         currentSort = if (currentSort == TicketViewModel.SortBy.DATE) {
@@ -64,7 +71,15 @@ class Tickets : Fragment() {
         }
     }
 
-    private fun navigateToTicketDetail(ticket: Ticket) {
-        // Implementation of navigation to the ticket detail fragment or activity
+    fun navigateToTicketDetail(ticket: Ticket, isEmployee: Boolean) {
+        val fragment = if (isEmployee) {
+            EmployeeTicketDetails.newInstance(ticket)
+        } else {
+            ClientTicketDetails.newInstance(ticket)
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

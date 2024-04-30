@@ -23,6 +23,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -148,6 +149,7 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
             findItem(R.id.navbar_tickets).isVisible = role == "Cliente"
             findItem(R.id.navbar_work).isVisible = role == "Empleado"
         }
+        addTicketBtn.visibility = if (role == "Cliente") View.VISIBLE else View.GONE
     }
 
     override fun onBackPressed(){

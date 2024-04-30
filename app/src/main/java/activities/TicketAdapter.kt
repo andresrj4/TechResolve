@@ -3,6 +3,7 @@ package activities
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -12,28 +13,38 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class TicketsAdapter(private var tickets: MutableList<Ticket>, private val onItemClick: (Ticket) -> Unit) : RecyclerView.Adapter<TicketsAdapter.ViewHolder>() {
+class TicketAdapter(
+    private var tickets: MutableList<Ticket>,
+    private val isEmployee: Boolean,
+    private val onItemClick: (Ticket) -> Unit,
+    private val onDetailsClick: (Ticket) -> Unit
+) : RecyclerView.Adapter<TicketAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val titleTextView: TextView = view.findViewById(R.id.client_list_ticket_title)
-        val statusTextView: TextView = view.findViewById(R.id.client_list_ticket_status)
-        val dateTextView: TextView = view.findViewById(R.id.client_list_ticket_date_created)
+    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        val titleTextView: TextView = view.findViewById(R.id.ticket_list_ticket_title)
+        val statusTextView: TextView = view.findViewById(R.id.ticket_list_ticket_status)
+        val dateTextView: TextView = view.findViewById(R.id.ticket_list_ticket_date_created)
+        val detailsButton: Button = view.findViewById(R.id.ticket_list_ticket_details_btn) // Reference to the details button
 
-        fun bind(ticket: Ticket, clickListener: (Ticket) -> Unit) {
+        fun bind(ticket: Ticket, clickListener: (Ticket) -> Unit, detailsClickListener: (Ticket) -> Unit) {
             titleTextView.text = ticket.ticketTitle
-            statusTextView.text = ticket.ticketStatus.toString()
+            statusTextView.text = ticket.ticketStatus.getDisplayString()
             dateTextView.text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(ticket.ticketDateCreated))
+            val colorId = ticket.ticketStatus.getColor()
+            statusTextView.setTextColor(ContextCompat.getColor(view.context, colorId))
+
             itemView.setOnClickListener { clickListener(ticket) }
+            detailsButton.setOnClickListener { detailsClickListener(ticket) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ticket_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.ticket_list_items, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(tickets[position], onItemClick)
+        holder.bind(tickets[position], onItemClick, onDetailsClick)
     }
 
     override fun getItemCount(): Int = tickets.size

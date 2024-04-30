@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,9 +15,9 @@ import model.Ticket
 import model.TicketStatus
 
 class MyWork : Fragment() {
-    private lateinit var openTicketsAdapter: TicketsAdapter
-    private lateinit var assignedTicketsAdapter: TicketsAdapter
-    private lateinit var openTicketsRecyclerView: RecyclerView
+    private lateinit var availableTicketsAdapter: TicketAdapter
+    private lateinit var assignedTicketsAdapter: TicketAdapter
+    private lateinit var availableTicketsRecyclerView: RecyclerView
     private lateinit var assignedTicketsRecyclerView: RecyclerView
     private lateinit var viewModel: TicketViewModel
 
@@ -34,53 +32,79 @@ class MyWork : Fragment() {
     }
 
     private fun setupRecyclerViews(view: View) {
-        openTicketsRecyclerView = view.findViewById(R.id.employee_open_tickets_recycle_viewer)
+        availableTicketsRecyclerView = view.findViewById(R.id.employee_available_tickets_recycle_viewer)
         assignedTicketsRecyclerView = view.findViewById(R.id.employee_assigned_tickets_recycle_viewer)
 
-        openTicketsRecyclerView.layoutManager = LinearLayoutManager(context)
+        availableTicketsRecyclerView.layoutManager = LinearLayoutManager(context)
         assignedTicketsRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        // Set initial adapters with mutable empty lists
-        openTicketsAdapter = TicketsAdapter(mutableListOf()) { ticket -> claimTicket(ticket) }
-        assignedTicketsAdapter = TicketsAdapter(mutableListOf()) { ticket -> navigateToTicketDetail(ticket) }
+        val isEmployee = UserManager.getInstance().isEmployee()
 
-        openTicketsRecyclerView.adapter = openTicketsAdapter
+        availableTicketsAdapter = TicketAdapter(mutableListOf(), isEmployee,
+            onItemClick = { ticket ->
+            },
+            onDetailsClick = { ticket ->
+                navigateToTicketDetail(ticket, isEmployee)
+            }
+        )
+        assignedTicketsAdapter = TicketAdapter(mutableListOf(), isEmployee,
+            onItemClick = { ticket ->
+            },
+            onDetailsClick = { ticket ->
+                navigateToTicketDetail(ticket, isEmployee)
+            }
+        )
+
+        availableTicketsRecyclerView.adapter = availableTicketsAdapter
         assignedTicketsRecyclerView.adapter = assignedTicketsAdapter
     }
 
     private fun setupClickListeners(view: View) {
-        val openTicketsLabel = view.findViewById<TextView>(R.id.employee_open_tickets_sort_header)
-        val assignedTicketsLabel = view.findViewById<TextView>(R.id.employee_in_process_tickets_sort_header)
+        val openTicketsLabel = view.findViewById<TextView>(R.id.employee_available_tickets_sort_header)
+        val assignedTicketsLabel = view.findViewById<TextView>(R.id.employee_assigned_tickets_sort_header)
 
         openTicketsLabel.setOnClickListener {
-            toggleVisibility(openTicketsRecyclerView)
+            toggleVisibility(availableTicketsRecyclerView)
         }
         assignedTicketsLabel.setOnClickListener {
             toggleVisibility(assignedTicketsRecyclerView)
         }
     }
 
-    private fun setupViewModel() {
+    fun setupViewModel() {
         viewModel = ViewModelProvider(requireActivity()).get(TicketViewModel::class.java)
-        viewModel.loadOpenTickets()
+        viewModel.setupTicketListener()  // Start listening for real-time updates
         viewModel.ticketsLiveData.observe(viewLifecycleOwner) { tickets ->
-            openTicketsAdapter.updateData(tickets.filter { it.ticketStatus == TicketStatus.OPEN }.toMutableList())
-            openTicketsRecyclerView.visibility = if (tickets.isNotEmpty()) View.VISIBLE else View.GONE
-            if (tickets.isEmpty()) {
-                Toast.makeText(context, "No open tickets available.", Toast.LENGTH_SHORT).show()
-            }
+            updateTicketLists(tickets)
         }
     }
+
+    private fun updateTicketLists(tickets: List<Ticket>) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        availableTicketsAdapter.updateData(tickets.filter {
+            it.ticketStatus == TicketStatus.OPEN || it.ticketStatus == TicketStatus.PENDING
+        }.toMutableList())
+
+        assignedTicketsAdapter.updateData(tickets.filter {
+            it.ticketEmployeeID == userId
+        }.toMutableList())
+    }
+
 
     private fun toggleVisibility(recyclerView: RecyclerView) {
         recyclerView.visibility = if (recyclerView.visibility == View.VISIBLE) View.GONE else View.VISIBLE
     }
 
-    private fun claimTicket(ticket: Ticket) {
-        // Implementation to claim an open ticket
-    }
-
-    private fun navigateToTicketDetail(ticket: Ticket) {
-        // Navigate to detail view with options to update ticket status or add notes/materials
+    fun navigateToTicketDetail(ticket: Ticket, isEmployee: Boolean) {
+        val fragment = if (isEmployee) {
+            EmployeeTicketDetails.newInstance(ticket)
+        } else {
+            ClientTicketDetails.newInstance(ticket)
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
