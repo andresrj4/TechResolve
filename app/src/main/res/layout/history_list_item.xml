@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/history_entry_text"
+    android:layout_width="match_parent"
+    android:fontFamily="@font/inter"
+    android:textColor="@color/battleship_grey"
+    android:textSize="12sp"
+    android:layout_height="wrap_content"
+    android:padding="6dp" />

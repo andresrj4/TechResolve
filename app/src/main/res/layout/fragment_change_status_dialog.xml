@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/btn_saffron_outline_light_bg_rounded_10"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/change_status_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Cambiar Estado del Ticket"
+        android:fontFamily="@font/inter"
+        android:gravity="center"
+        android:textColor="@color/saffron"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <EditText
+        android:id="@+id/change_status_dialog_note_input"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/inter"
+        android:hint="Nota requerida para proceder con el cambio de estado..."
+        android:inputType="textMultiLine"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/change_status_dialog_to_pending_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Pendiente"
+        android:background="@drawable/btn_ticket_status_pending"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/french_gray"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/change_status_dialog_to_resolved_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Resuelto"
+        android:background="@drawable/btn_ticket_status_resolved"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/french_gray"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/change_status_dialog_close_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Cancelar"
+        android:background="@drawable/btn_ticket_status_closed"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/french_gray"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

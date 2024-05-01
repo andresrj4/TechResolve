@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_saffron_outline_light_bg_rounded_10"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/history_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="Historial del Ticket"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center"
+        android:padding="8dp" />
+
+    <!-- Set a minHeight and a maxHeight to maintain proportions -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_dialog_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:maxHeight="400dp"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/history_dialog_close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Cerrar"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/french_gray"
+        android:clickable="true"
+        android:background="@drawable/btn_saffron_outline_light_bg_rounded_10"
+        android:layout_marginTop="16dp"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

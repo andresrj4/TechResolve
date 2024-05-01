@@ -17,7 +17,7 @@
 
     <!-- Custom Dialog Style -->
     <style name="DialogAnimationFadeIn" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="android:background">@drawable/btn_saffron_outline</item> <!-- Custom drawable for background with rounded corners -->
+        <item name="android:background">@drawable/btn_saffron_outline_rounded_24</item> <!-- Custom drawable for background with rounded corners -->
         <item name="android:windowBackground">@android:color/transparent</item> <!-- Make the dialog window background transparent -->
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>

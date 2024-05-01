@@ -40,6 +40,7 @@ class EmployeeTicketDetails : Fragment() {
         ticket?.let {
             viewModel.setTicket(it)
             updateUI(it)
+            setupButtonActions(it)
         }
     }
 
@@ -66,59 +67,41 @@ class EmployeeTicketDetails : Fragment() {
             rootView.findViewById<TextView>(R.id.employee_ticket_details_client_assigned).text = "$name $lastName"
         }
 
-        val isAssignedToEmployee = ticket.ticketEmployeeID == FirebaseAuth.getInstance().currentUser?.uid
-
-        rootView.findViewById<Button>(R.id.employee_ticket_details_materials_btn).visibility =
-            if (isAssignedToEmployee && (ticket.ticketStatus !in listOf(TicketStatus.CLOSED, TicketStatus.RESOLVED) || ticket.ticketMaterialsUsed.isNotEmpty())) View.VISIBLE else View.GONE
-
-        rootView.findViewById<Button>(R.id.employee_ticket_details_history_btn).visibility =
-            if (ticket.ticketHistory.isNotEmpty()) View.VISIBLE else View.GONE
-
-        rootView.findViewById<Button>(R.id.employee_ticket_details_notes_btn).visibility =
-            if (ticket.ticketStatus in listOf(TicketStatus.RESOLVED, TicketStatus.CLOSED)) View.VISIBLE else View.GONE
-
-        rootView.findViewById<Button>(R.id.employee_ticket_change_status_btn).visibility =
-            if (isAssignedToEmployee && ticket.ticketStatus !in listOf(TicketStatus.CLOSED, TicketStatus.RESOLVED)) View.VISIBLE else View.GONE
-
-        rootView.findViewById<Button>(R.id.employee_ticket_claim_btn).apply {
-            visibility = if (ticket.ticketStatus in listOf(TicketStatus.OPEN, TicketStatus.PENDING) && ticket.ticketEmployeeID == null) View.VISIBLE else View.GONE
-            setOnClickListener { viewModel.claimTicket(ticket) }
-        }
+        setupButtonActions(ticket)
     }
-/*
+
     private fun setupButtonActions(ticket: Ticket) {
         val rootView = view ?: return
-        val materialsButton = rootView.findViewById<Button>(R.id.employee_ticket_details_materials_btn)
-        val historyButton = rootView.findViewById<Button>(R.id.employee_ticket_details_history_btn)
-        val notesButton = rootView.findViewById<Button>(R.id.employee_ticket_details_notes_btn)
-        val changeStatusButton = rootView.findViewById<Button>(R.id.employee_ticket_change_status_btn)
-
-        materialsButton.setOnClickListener {
+        rootView.findViewById<Button>(R.id.employee_ticket_details_materials_btn).setOnClickListener {
             showMaterialsDialog(ticket)
         }
 
-        historyButton.setOnClickListener {
+        rootView.findViewById<Button>(R.id.employee_ticket_details_history_btn).setOnClickListener {
             showHistoryDialog(ticket)
         }
 
-        notesButton.setOnClickListener {
+        rootView.findViewById<Button>(R.id.employee_ticket_details_notes_btn).setOnClickListener {
             showNotesDialog(ticket)
         }
 
-        changeStatusButton.setOnClickListener {
+        rootView.findViewById<Button>(R.id.employee_ticket_change_status_btn).setOnClickListener {
             showChangeStatusDialog(ticket)
+        }
+
+        val claimButton = rootView.findViewById<Button>(R.id.employee_ticket_claim_btn)
+        claimButton.visibility = if (ticket.ticketStatus in listOf(TicketStatus.OPEN, TicketStatus.PENDING) &&
+            ticket.ticketEmployeeID == null) View.VISIBLE else View.GONE
+        claimButton.setOnClickListener {
+            viewModel.claimTicket(ticket)
         }
     }
 
     private fun showMaterialsDialog(ticket: Ticket) {
-        // Example of starting a dialog or new fragment
-        // This should be a DialogFragment where you can add materials
         MaterialDialogFragment.newInstance(ticket).show(parentFragmentManager, "MaterialDialog")
     }
 
     private fun showHistoryDialog(ticket: Ticket) {
-        // Similar to materials, use a DialogFragment to display history
-        HistoryDialogFragment.newInstance(ticket.ticketHistory).show(parentFragmentManager, "HistoryDialog")
+        HistoryDialogFragment.newInstance(ticket.ticketID).show(parentFragmentManager, "HistoryDialog")
     }
 
     private fun showNotesDialog(ticket: Ticket) {
@@ -126,10 +109,6 @@ class EmployeeTicketDetails : Fragment() {
     }
 
     private fun showChangeStatusDialog(ticket: Ticket) {
-        StatusChangeDialogFragment.newInstance(ticket, { newStatus ->
-            ConfirmationDialog.newInstance("Confirm Status Change", "Are you sure you want to change the status?", {
-                viewModel.updateTicketStatus(ticket.ticketID, newStatus)
-            }, {}).show(parentFragmentManager, "ConfirmStatusChange")
-        }).show(parentFragmentManager, "StatusChangeDialog")
-    }*/
+        ChangeStatusDialogFragment.newInstance(ticket).show(parentFragmentManager, "ChangeStatusDialog")
+    }
 }

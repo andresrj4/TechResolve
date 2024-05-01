@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import model.Ticket
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FieldValue
@@ -15,35 +16,68 @@ import com.google.firebase.firestore.Source
 import model.HistoryEntry
 import model.Material
 import model.TicketStatus
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class TicketViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-
     val ticketsLiveData: MutableLiveData<List<Ticket>> = MutableLiveData()
-    val selectedTicketLiveData = MutableLiveData<Ticket>()  // LiveData for specific ticket details
-    var currentSortOrder = MutableLiveData(SortBy.DATE) // Default sort by date
+    val selectedTicketLiveData = MutableLiveData<Ticket>()
+    val historyEntriesLiveData = MutableLiveData<List<HistoryEntry>>()
+    private fun getCurrentUserName(): String = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
 
     enum class SortBy {
         DATE,
         STATUS
     }
 
-    fun loadOpenAndPendingTickets() {
+    fun setTicket(ticket: Ticket) {
+        selectedTicketLiveData.value = ticket
+    }
+
+    fun setupTicketListener() {
         db.collection("Tickets")
-            .whereEqualTo("ticketStatus", TicketStatus.OPEN.name)
-            .get(Source.SERVER)
-            .addOnSuccessListener { snapshots ->
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
                 val ticketsList = ArrayList<Ticket>()
-                for (doc in snapshots.documents) {
+                for (doc in snapshots!!) {
                     doc.toObject(Ticket::class.java)?.let {
                         ticketsList.add(it)
                     }
                 }
                 ticketsLiveData.postValue(ticketsList)
             }
+    }
+
+    private fun addHistoryEntry(ticketId: String, action: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "Unknown"
+        val timestamp = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US)
+        val formattedDate = dateFormat.format(Date(timestamp))
+        val message = "$formattedDate: $action"
+        val historyEntry = HistoryEntry(timestamp, message, userId)
+        db.collection("Tickets").document(ticketId)
+            .update("ticketHistory", FieldValue.arrayUnion(historyEntry))
             .addOnFailureListener { e ->
-                Log.w(TAG, "Data fetch from server failed", e)
+                Log.e(TAG, "Failed to add history entry: ", e)
             }
+    }
+
+    fun loadHistoryForTicket(ticketId: String) {
+        db.collection("Tickets").document(ticketId).addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error)
+                return@addSnapshotListener
+            }
+            snapshot?.toObject(Ticket::class.java)?.let {
+                historyEntriesLiveData.postValue(it.ticketHistory)
+            }
+        }
     }
 
     fun submitTicket(title: String, description: String, userId: String) {
@@ -58,17 +92,39 @@ class TicketViewModel : ViewModel() {
             ticketStatus = TicketStatus.OPEN,
             ticketNotes = mutableListOf(),
             ticketMaterialsUsed = mutableListOf(),
-            ticketHistory = mutableListOf(
-                HistoryEntry(
-                    timestamp = currentTime,
-                    message = "Ticket created",
-                    userId = userId
-                )  // Ticket History Entry ^^
-            )
+            ticketHistory = mutableListOf()
         )
         ticketRef.set(ticket)
-            .addOnSuccessListener { Log.d(TAG, "Ticket created successfully") }
-            .addOnFailureListener { e -> Log.w(TAG, "Failed to create ticket", e) }
+            .addOnSuccessListener {
+                Log.d(TAG, "Ticket created successfully")
+                // Use addHistoryEntry to log the creation with date and time
+                addHistoryEntry(ticket.ticketID, "created the ticket.")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Failed to create ticket", e)
+            }
+    }
+
+    fun claimTicket(ticket: Ticket) {
+        val currentUser = FirebaseAuth.getInstance().currentUser ?: return
+        val updates = mapOf(
+            "ticketStatus" to TicketStatus.IN_PROGRESS.name,
+            "ticketEmployeeID" to currentUser.uid
+        )
+
+        db.collection("Tickets").document(ticket.ticketID)
+            .update(updates)
+            .addOnSuccessListener {
+                val updatedTicket = ticket.copy(
+                    ticketStatus = TicketStatus.IN_PROGRESS,
+                    ticketEmployeeID = currentUser.uid
+                )
+                selectedTicketLiveData.postValue(updatedTicket)
+                addHistoryEntry(ticket.ticketID, "claimed the ticket.")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to claim ticket: ", e)
+            }
     }
 
     fun loadClientTickets(clientId: String, sortBy: SortBy, source: Source = Source.CACHE) {
@@ -93,100 +149,64 @@ class TicketViewModel : ViewModel() {
             }
     }
 
-    fun setTicket(ticket: Ticket) {
-        selectedTicketLiveData.value = ticket
-    }
-
-    fun claimTicket(ticket: Ticket) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            Log.e(TAG, "User not logged in")
-            return
-        }
-
-        val ticketUpdates = mapOf(
-            "ticketStatus" to TicketStatus.IN_PROGRESS.name,
-            "ticketEmployeeID" to currentUser.uid
-        )
-
-        FirebaseFirestore.getInstance().collection("Tickets").document(ticket.ticketID)
-            .update(ticketUpdates)
-            .addOnSuccessListener {
-                Log.d(TAG, "Ticket claimed successfully.")
-                val updatedTicket = ticket.copy(
-                    ticketStatus = TicketStatus.IN_PROGRESS,
-                    ticketEmployeeID = currentUser.uid
-                )
-                selectedTicketLiveData.postValue(updatedTicket)  // Update LiveData to refresh UI
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Failed to claim ticket: ${e.message}")
-            }
-    }
-
-    fun setupTicketListener() {
-        db.collection("Tickets")
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-
-                val ticketsList = ArrayList<Ticket>()
-                for (doc in snapshots!!) {
-                    doc.toObject(Ticket::class.java)?.let {
-                        ticketsList.add(it)
-                    }
-                }
-                ticketsLiveData.postValue(ticketsList)
-            }
-    }
-
     fun addMaterialToTicket(ticketId: String, material: Material) {
         db.collection("Tickets").document(ticketId)
             .update("ticketMaterialsUsed", FieldValue.arrayUnion(material))
-            .addOnSuccessListener { Log.d(TAG, "Material added to ticket") }
-            .addOnFailureListener { e -> Log.e(TAG, "Error adding material to ticket", e) }
-    }
-    /*
-    private fun showHistoryDialog(ticket: Ticket) {
-        // Similar to materials, use a DialogFragment to display history
-        HistoryDialogFragment.newInstance(ticket.ticketHistory).show(parentFragmentManager, "HistoryDialog")
-    }*/
-
-    fun addNoteToTicket(ticketId: String, note: String) {
-        val timestamp = System.currentTimeMillis()
-        db.collection("Tickets").document(ticketId)
-            .update(
-                "ticketNotes", FieldValue.arrayUnion(note),
-                "ticketHistory", FieldValue.arrayUnion(HistoryEntry(timestamp, note, FirebaseAuth.getInstance().currentUser?.uid ?: ""))
-            )
-            .addOnSuccessListener { Log.d(TAG, "Note added to ticket") }
-            .addOnFailureListener { e -> Log.e(TAG, "Error adding note to ticket", e) }
+            .addOnSuccessListener {
+                addHistoryEntry(ticketId, "added material: ${material.name}, Quantity: ${material.quantity}, Price: ${material.price}.")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error adding material to ticket: ", e)
+            }
     }
 
-
-
-    fun updateTicketStatus(ticketId: String, newStatus: TicketStatus) {
+    fun addNoteToTicket(ticketId: String, noteText: String) {
         db.collection("Tickets").document(ticketId)
-            .update("ticketStatus", newStatus.name)
-            .addOnSuccessListener { Log.d(TAG, "Ticket status updated") }
-            .addOnFailureListener { e -> Log.e(TAG, "Error updating ticket status", e) }
+            .update("ticketNotes", FieldValue.arrayUnion(noteText))
+            .addOnSuccessListener {
+                selectedTicketLiveData.value?.let { currentTicket ->
+                    val updatedNotes = currentTicket.ticketNotes.toMutableList()
+                    updatedNotes.add(noteText)  // Add the note text directly
+                    val updatedTicket = currentTicket.copy(ticketNotes = updatedNotes)
+                    selectedTicketLiveData.postValue(updatedTicket)
+                    addHistoryEntry(ticketId, "added note: '$noteText'")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error adding note to ticket: ", e)
+            }
     }
 
-    fun updateTicket(ticket: Ticket) {
-        db.collection("Tickets").document(ticket.ticketID)
-            .set(ticket, SetOptions.merge())
-            .addOnSuccessListener { Log.d("TicketViewModel", "Ticket successfully updated!") }
-            .addOnFailureListener { e -> Log.e("TicketViewModel", "Error updating ticket", e) }
-        }
-
-    fun addNoteToTicket(ticketId: String, note: String, userId: String) {
-        val timestamp = System.currentTimeMillis()
+    fun updateTicketStatus(ticketId: String, newStatus: TicketStatus, note: String) {
+        val updates = hashMapOf<String, Any>(
+            "ticketStatus" to newStatus.name,
+            "ticketNotes" to FieldValue.arrayUnion(note)
+        )
         db.collection("Tickets").document(ticketId)
-            .update("ticketNotes", FieldValue.arrayUnion(note),
-                "ticketHistory", FieldValue.arrayUnion(HistoryEntry(timestamp, note, userId)))
-            .addOnSuccessListener { Log.d("TicketViewModel", "Note added to ticket") }
-            .addOnFailureListener { e -> Log.e("TicketViewModel", "Error adding note to ticket", e) }
-        }
+            .update(updates)
+            .addOnSuccessListener {
+                selectedTicketLiveData.value?.let { currentTicket ->
+                    val updatedTicket = currentTicket.copy(
+                        ticketStatus = newStatus,
+                        ticketNotes = currentTicket.ticketNotes.apply { add(note) }
+                    )
+                    selectedTicketLiveData.postValue(updatedTicket)
+                    addHistoryEntry(ticketId, "Changed status to '${newStatus.name}', note: '$note'")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error updating ticket status: ", e)
+            }
+    }
+
+    fun unassignTicket(ticketId: String) {
+        db.collection("Tickets").document(ticketId)
+            .update("ticketEmployeeID", null)
+            .addOnSuccessListener {
+                addHistoryEntry(ticketId, "Ticket unassigned from employee")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to unassign ticket: ", e)
+            }
+    }
 }

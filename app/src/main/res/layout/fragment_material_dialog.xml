@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_saffron_outline_light_bg_rounded_10"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="activities.MaterialDialogFragment">
+
+    <TextView
+        android:id="@+id/material_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="Lista de materiales"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center_horizontal"
+        android:padding="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/white"
+                android:text="Material"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/white"
+                android:text="Cantidad"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/white"
+                android:text="Precio"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/white"
+                android:text="Total"
+                android:gravity="center"/>
+        </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/material_dialog_material_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:maxHeight="400dp"
+        android:padding="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter"
+        android:text="Material:" />
+    <EditText
+        android:id="@+id/material_dialog_material_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="Ingrese el material..."
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter"
+        android:text="Cantidad" />
+    <EditText
+        android:id="@+id/material_dialog_quantity_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="Ingrese cantidad usada..."
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="numberDecimal" />
+
+    <!-- Price -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter"
+        android:text="Precio" />
+    <EditText
+        android:id="@+id/material_dialog_price_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="Ingrese precio unitario..."
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/material_dialog_add_material_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/btn_saffron_outline_rounded_10"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/french_gray"
+            android:text="Agregar"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/material_dialog_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/btn_saffron_outline_rounded_10"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/french_gray"
+            android:text="Cancelar"
+            android:layout_marginLeft="8dp"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+</LinearLayout>

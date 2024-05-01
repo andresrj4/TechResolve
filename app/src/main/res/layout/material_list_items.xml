@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/material_name"
+        android:layout_width="0dp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/battleship_grey"
+        android:textSize="10sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/material_quantity"
+        android:layout_width="0dp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/battleship_grey"
+        android:textSize="10sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/material_price"
+        android:layout_width="0dp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/battleship_grey"
+        android:textSize="10sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/material_total"
+        android:layout_width="0dp"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/battleship_grey"
+        android:textSize="10sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+</LinearLayout>

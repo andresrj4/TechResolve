@@ -38,7 +38,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:fontFamily="@font/inter"
-        android:background="@drawable/btn_saffron_outline_2"
+        android:background="@drawable/btn_saffron_outline_rounded_10"
         android:clickable="true"
         android:text="Detalles"
         android:textAllCaps="false"

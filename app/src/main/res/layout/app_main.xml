@@ -81,9 +81,10 @@
         app:layout_constraintBottom_toTopOf="@id/navbar_panel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp">
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp">
     </FrameLayout>
 
     <Button
@@ -93,7 +94,7 @@
         android:text="+"
         android:textSize="35sp"
         android:textColor="@color/french_gray"
-        android:background="@drawable/btn_saffron_outline"
+        android:background="@drawable/btn_saffron_outline_rounded_24"
         android:clickable="true"
         app:layout_constraintEnd_toEndOf="@id/navbar_panel"
         app:layout_constraintBottom_toTopOf="@id/navbar_panel"
@@ -108,7 +109,7 @@
             app:itemIconTint="@drawable/app_navbar_tab_color"
             app:itemPaddingTop="20dp"
             app:itemPaddingBottom="20dp"
-            android:background="@drawable/btn_saffron_outline"
+            android:background="@drawable/btn_saffron_outline_rounded_24"
             app:itemTextColor="@drawable/app_navbar_tab_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:labelVisibilityMode="labeled"
