@@ -17,13 +17,16 @@ data class Ticket(
     var ticketStatus: TicketStatus = TicketStatus.OPEN,
     val ticketNotes: MutableList<String> = mutableListOf(),
     val ticketMaterialsUsed: MutableList<Material> = mutableListOf(),
-    val ticketHistory: MutableList<HistoryEntry> = mutableListOf()
+    val ticketHistory: MutableList<HistoryEntry> = mutableListOf(),
+    var isLocked: Boolean = false
 ) : Serializable
 
 data class Material(
     val name: String = "",
     val quantity: Int = 0,
-    val price: Double = 0.0
+    val price: Double = 0.0,
+    @get:JvmName("getIsTotal")
+    val isTotal: Boolean = false
 ) : Serializable {
     val total: Double
         get() = quantity * price

@@ -97,8 +97,7 @@ class TicketViewModel : ViewModel() {
         ticketRef.set(ticket)
             .addOnSuccessListener {
                 Log.d(TAG, "Ticket created successfully")
-                // Use addHistoryEntry to log the creation with date and time
-                addHistoryEntry(ticket.ticketID, "created the ticket.")
+                addHistoryEntry(ticket.ticketID, "Creación de ticket.")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Failed to create ticket", e)
@@ -120,7 +119,7 @@ class TicketViewModel : ViewModel() {
                     ticketEmployeeID = currentUser.uid
                 )
                 selectedTicketLiveData.postValue(updatedTicket)
-                addHistoryEntry(ticket.ticketID, "claimed the ticket.")
+                addHistoryEntry(ticket.ticketID, "Ticket fue asignado.")
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Failed to claim ticket: ", e)
@@ -153,7 +152,7 @@ class TicketViewModel : ViewModel() {
         db.collection("Tickets").document(ticketId)
             .update("ticketMaterialsUsed", FieldValue.arrayUnion(material))
             .addOnSuccessListener {
-                addHistoryEntry(ticketId, "added material: ${material.name}, Quantity: ${material.quantity}, Price: ${material.price}.")
+                addHistoryEntry(ticketId, "Nuevo material: ${material.name}, Cantidad: ${material.quantity}, Precio: ${material.price}.")
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error adding material to ticket: ", e)
@@ -166,10 +165,10 @@ class TicketViewModel : ViewModel() {
             .addOnSuccessListener {
                 selectedTicketLiveData.value?.let { currentTicket ->
                     val updatedNotes = currentTicket.ticketNotes.toMutableList()
-                    updatedNotes.add(noteText)  // Add the note text directly
+                    updatedNotes.add(noteText)
                     val updatedTicket = currentTicket.copy(ticketNotes = updatedNotes)
                     selectedTicketLiveData.postValue(updatedTicket)
-                    addHistoryEntry(ticketId, "added note: '$noteText'")
+                    addHistoryEntry(ticketId, "Nueva nota: '$noteText'")
                 }
             }
             .addOnFailureListener { e ->
@@ -191,7 +190,7 @@ class TicketViewModel : ViewModel() {
                         ticketNotes = currentTicket.ticketNotes.apply { add(note) }
                     )
                     selectedTicketLiveData.postValue(updatedTicket)
-                    addHistoryEntry(ticketId, "Changed status to '${newStatus.name}', note: '$note'")
+                    addHistoryEntry(ticketId, "Cambio de estado a '${newStatus.name}', Nota añadida: '$note'")
                 }
             }
             .addOnFailureListener { e ->
@@ -203,10 +202,38 @@ class TicketViewModel : ViewModel() {
         db.collection("Tickets").document(ticketId)
             .update("ticketEmployeeID", null)
             .addOnSuccessListener {
-                addHistoryEntry(ticketId, "Ticket unassigned from employee")
+                addHistoryEntry(ticketId, "Empleado se dio de baja del ticket.")
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Failed to unassign ticket: ", e)
+            }
+    }
+
+    fun lockTicket(ticketId: String) {
+        val updates = mapOf(
+            "isLocked" to true
+        )
+        db.collection("Tickets").document(ticketId)
+            .update(updates)
+            .addOnSuccessListener {
+                Log.d(TAG, "Ticket locked successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to lock ticket: ", e)
+            }
+    }
+
+    fun unlockTicket(ticketId: String) {
+        val updates = mapOf(
+            "locked" to false
+        )
+        db.collection("Tickets").document(ticketId)
+            .update(updates)
+            .addOnSuccessListener {
+                Log.d(TAG, "Ticket unlocked successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to unlock ticket: ", e)
             }
     }
 }

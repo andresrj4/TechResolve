@@ -9,9 +9,10 @@
     <color name="jet_v2">#2B2B2B</color>
     <color name="night">#161616</color>
     <color name="french_gray">#AEAEB2</color>
-    <color name="tyrian_purple">#6B0C3A</color>
-    <color name="british_racing_green">#0A442A</color>
-    <color name="copper">#BE7028</color>
+    <color name="tyrian_purple">#D3136F</color>
+    <color name="british_racing_green">#0B9558</color>
+    <color name="copper">#EF831F</color>
     <color name="dim_gray">#626262</color>
-    <color name="falu_red">#752020</color>
+    <color name="falu_red">#BC3030</color>
+    <color name="hyperlink_blue">#3366CC</color>
 </resources>

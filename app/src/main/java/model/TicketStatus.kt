@@ -25,6 +25,7 @@ enum class TicketStatus : Serializable {
             RESOLVED -> R.color.british_racing_green
         }
     }
+
     fun getBackgroundResource(): Int {
         return when (this) {
             OPEN -> R.drawable.btn_ticket_status_open

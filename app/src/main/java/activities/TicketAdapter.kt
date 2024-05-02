@@ -3,15 +3,11 @@ package activities
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_de_tickets.R
 import model.Ticket
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class TicketAdapter(
     private var tickets: MutableList<Ticket>,
@@ -23,18 +19,16 @@ class TicketAdapter(
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val titleTextView: TextView = view.findViewById(R.id.ticket_list_ticket_title)
         val statusTextView: TextView = view.findViewById(R.id.ticket_list_ticket_status)
-        val dateTextView: TextView = view.findViewById(R.id.ticket_list_ticket_date_created)
-        val detailsButton: Button = view.findViewById(R.id.ticket_list_ticket_details_btn) // Reference to the details button
+        val detailsLink: TextView = view.findViewById(R.id.ticket_list_ticket_details_link)
 
         fun bind(ticket: Ticket, clickListener: (Ticket) -> Unit, detailsClickListener: (Ticket) -> Unit) {
             titleTextView.text = ticket.ticketTitle
             statusTextView.text = ticket.ticketStatus.getDisplayString()
-            dateTextView.text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(ticket.ticketDateCreated))
             val colorId = ticket.ticketStatus.getColor()
             statusTextView.setTextColor(ContextCompat.getColor(view.context, colorId))
 
             itemView.setOnClickListener { clickListener(ticket) }
-            detailsButton.setOnClickListener { detailsClickListener(ticket) }
+            detailsLink.setOnClickListener { detailsClickListener(ticket) }
         }
     }
 

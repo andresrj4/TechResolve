@@ -73,7 +73,7 @@ class MyWork : Fragment() {
 
     fun setupViewModel() {
         viewModel = ViewModelProvider(requireActivity()).get(TicketViewModel::class.java)
-        viewModel.setupTicketListener()  // Start listening for real-time updates
+        viewModel.setupTicketListener()
         viewModel.ticketsLiveData.observe(viewLifecycleOwner) { tickets ->
             updateTicketLists(tickets)
         }
@@ -90,7 +90,6 @@ class MyWork : Fragment() {
             it.ticketEmployeeID == userId
         }.toMutableList())
     }
-
 
     private fun toggleVisibility(recyclerView: RecyclerView) {
         recyclerView.visibility = if (recyclerView.visibility == View.VISIBLE) View.GONE else View.VISIBLE

@@ -30,10 +30,9 @@ class Tickets : Fragment() {
 
         ticketsAdapter = TicketAdapter(mutableListOf(), isEmployee,
             onItemClick = { ticket ->
-                // Handle general item click
             },
             onDetailsClick = { ticket ->
-                navigateToTicketDetail(ticket, isEmployee) // Navigate to details using the details button specifically
+                navigateToTicketDetail(ticket, isEmployee)
             }
         )
         recyclerView.adapter = ticketsAdapter
@@ -41,7 +40,6 @@ class Tickets : Fragment() {
         setupViewModel()
         return view
     }
-
 
     private fun toggleSortOrder() {
         currentSort = if (currentSort == TicketViewModel.SortBy.DATE) {

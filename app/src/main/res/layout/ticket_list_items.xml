@@ -3,44 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="10dp"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/ticket_list_ticket_title"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter"
-        android:textSize="11sp"
-        android:textColor="@android:color/white" />
-
-    <TextView
-        android:id="@+id/ticket_list_ticket_date_created"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/inter"
-        android:textSize="11sp"
-        android:textColor="@android:color/white"/>
+        android:textSize="12sp"
+        android:textColor="@android:color/white"
+        android:text="Ticket Title" />
 
     <TextView
         android:id="@+id/ticket_list_ticket_status"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/inter"
+        android:textSize="12sp"
+        android:textColor="@android:color/holo_red_dark"
+        android:text="Status" />
+
+    <TextView
+        android:id="@+id/ticket_list_ticket_details_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:fontFamily="@font/inter"
-        android:layout_marginStart="8dp"
-        android:textSize="11sp"
-        android:textColor="@android:color/holo_red_dark" />
-
-    <Button
-        android:id="@+id/ticket_list_ticket_details_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/inter"
-        android:background="@drawable/btn_saffron_outline_rounded_10"
+        android:padding="8dp"
+        android:gravity="end"
         android:clickable="true"
+        android:focusable="true"
         android:text="Detalles"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+        android:textColor="@color/hyperlink_blue"
+        android:layout_gravity="end" />
 </LinearLayout>

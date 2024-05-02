@@ -10,21 +10,8 @@ class ConfirmationDialog(
     private val negativeButtonText: String = "No",
     private val onConfirm: () -> Unit,
     private val onCancel: () -> Unit
+
 ) : DialogFragment() {
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(positiveButtonText) { dialog, which ->
-                onConfirm()
-            }
-            .setNegativeButton(negativeButtonText) { dialog, which ->
-                onCancel()
-            }
-            .create()
-    }
-
     companion object {
         fun newInstance(
             title: String,
@@ -36,5 +23,17 @@ class ConfirmationDialog(
         ): ConfirmationDialog {
             return ConfirmationDialog(title, message, positiveButtonText, negativeButtonText, onConfirm, onCancel)
         }
+    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveButtonText) { dialog, which ->
+                onConfirm()
+            }
+            .setNegativeButton(negativeButtonText) { dialog, which ->
+                onCancel()
+            }
+            .create()
     }
 }

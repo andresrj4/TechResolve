@@ -12,7 +12,7 @@ class NotesAdapter(private var notes: MutableList<String>) : RecyclerView.Adapte
         private val noteTextView: TextView = view.findViewById(R.id.note_text_view)
 
         fun bind(note: String) {
-            noteTextView.text = note  // Directly display the note string
+            noteTextView.text = note
         }
     }
 

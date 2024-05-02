@@ -30,6 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="12sp"
                 android:fontFamily="@font/inter"
                 android:textColor="@color/white"
                 android:text="Material"
@@ -39,6 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="12sp"
                 android:fontFamily="@font/inter"
                 android:textColor="@color/white"
                 android:text="Cantidad"
@@ -48,6 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="12sp"
                 android:fontFamily="@font/inter"
                 android:textColor="@color/white"
                 android:text="Precio"
@@ -57,6 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="12sp"
                 android:fontFamily="@font/inter"
                 android:textColor="@color/white"
                 android:text="Total"
@@ -70,13 +74,45 @@
         android:layout_weight="1"
         android:minHeight="200dp"
         android:maxHeight="400dp"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:scrollbars="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/material_dialog_grand_total_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_weight="1"
+            android:text="Total:"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:textStyle="bold"
+            android:paddingStart="35dp"/>
+
+        <TextView
+            android:id="@+id/material_dialog_grand_total_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text="$00.00"
+            android:fontFamily="@font/inter"
+            android:textColor="#3e9c35"
+            android:layout_alignParentEnd="true"
+            android:paddingEnd="30dp"/>
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/material_dialog_material_name_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:fontFamily="@font/inter"
+        android:paddingTop="5dp"
         android:text="Material:" />
     <EditText
         android:id="@+id/material_dialog_material_name_edittext"
@@ -94,11 +130,14 @@
         android:inputType="text" />
 
     <TextView
+        android:id="@+id/material_dialog_quantity_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:fontFamily="@font/inter"
+        android:paddingTop="5dp"
         android:text="Cantidad" />
+
     <EditText
         android:id="@+id/material_dialog_quantity_edittext"
         android:layout_width="match_parent"
@@ -114,12 +153,13 @@
         android:background="@drawable/saffron_underline_25dp"
         android:inputType="numberDecimal" />
 
-    <!-- Price -->
     <TextView
+        android:id="@+id/material_dialog_price_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:fontFamily="@font/inter"
+        android:paddingTop="5dp"
         android:text="Precio" />
     <EditText
         android:id="@+id/material_dialog_price_edittext"

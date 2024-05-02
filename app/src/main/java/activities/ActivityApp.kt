@@ -49,31 +49,30 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TicketViewModel::class.java)
         binding = AppMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         drawerLayout = findViewById(R.id.drawer_layout)
         addTicketBtn = findViewById(R.id.btn_add_ticket)
         toolbar = findViewById(R.id.main_toolbar)
         dotsIcon = findViewById(R.id.toolbar_dotIcon)
         menuIcon = findViewById(R.id.toolbar_menuIcon)
-        setSupportActionBar(toolbar)
 
+        setContentView(binding.root)
+        setSupportActionBar(toolbar)
         updateUserName()
         initializeUI()
         fetchUserRoleAndSetupNavigation()
 
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid
-
         val navigationView : NavigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
 
+        navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
         ).apply {
-            isDrawerIndicatorEnabled = false  // Disable the default icon
+            isDrawerIndicatorEnabled = false
             syncState()
         }
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -131,10 +130,10 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
             }
             R.id.toolbar_menu_logout -> {
                 val intent = Intent(this, ActivityLogin::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears the activity stack
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 Toast.makeText(this, "Cierre de sesión exitoso", Toast.LENGTH_SHORT).show()
-                finish()  // Ensure the current activity is closed
+                finish()
                 return true
             }
         }
@@ -144,6 +143,7 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private fun initializeUI() {
         setSupportActionBar(toolbar)
     }
+
     private fun setupNavigation(role: String?) {
         binding.navbarPanel.menu.apply {
             findItem(R.id.navbar_tickets).isVisible = role == "Cliente"
@@ -193,14 +193,11 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
             val userId = user.uid
             val database = FirebaseDatabase.getInstance()
             val userRef = database.getReference("Users").child(userId)
-
-            // Attach a listener to read the data at our user reference
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val name = snapshot.child("name").value.toString()  // Getting the name
-                    val lastName = snapshot.child("lastName").value.toString()  // Getting the last name
 
-                    // Update the TextView, combining name and last name
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val name = snapshot.child("name").value.toString()
+                    val lastName = snapshot.child("lastName").value.toString()
                     val userNameTextView = findViewById<TextView>(R.id.toolbar_username)
                     userNameTextView.text = "$name $lastName"
                 }
@@ -218,12 +215,9 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.app_open_ticket)
-
-        // Correctly find EditText by ID and cast them properly
         val ticketTitleEditText = dialog.findViewById<EditText>(R.id.ticket_title_editbox)
         val ticketDescriptionEditText = dialog.findViewById<EditText>(R.id.ticket_desc_editbox)
         val sendTicketBtn = dialog.findViewById<AppCompatButton>(R.id.submit_ticket_btn)
-
         val viewModel = ViewModelProvider(this).get(TicketViewModel::class.java)
 
         sendTicketBtn.setOnClickListener {
@@ -238,6 +232,7 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 Toast.makeText(this, "Por favor, complete todos los campos antes de enviar.", Toast.LENGTH_SHORT).show()
             }
         }
+
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

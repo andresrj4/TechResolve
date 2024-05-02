@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistema_de_tickets.R
 import model.Ticket
+import model.TicketStatus
 
 class NotesDialogFragment : DialogFragment() {
     private lateinit var notesAdapter: NotesAdapter
@@ -44,12 +45,33 @@ class NotesDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_notes_dialog, container, false)
-        notesAdapter = NotesAdapter(mutableListOf())
         notesList = view.findViewById(R.id.notes_dialog_recycler_view)
-        notesList.adapter = notesAdapter
         notesList.layoutManager = LinearLayoutManager(context)
-
         noteInputText = view.findViewById(R.id.note_input_text)
+        arguments?.getSerializable("ticket")?.let {
+            ticket = it as Ticket
+            notesAdapter = NotesAdapter(ticket.ticketNotes.toMutableList())
+        } ?: run {
+            notesAdapter = NotesAdapter(mutableListOf())
+        }
+        notesList.adapter = notesAdapter
+        viewModel.selectedTicketLiveData.observe(viewLifecycleOwner) { updatedTicket ->
+            updatedTicket?.let {
+                notesAdapter.updateData(it.ticketNotes)
+
+                when (it.ticketStatus) {
+                    TicketStatus.RESOLVED, TicketStatus.PENDING -> {
+                        noteInputText.visibility = View.GONE
+                        view.findViewById<Button>(R.id.add_note_button).visibility = View.GONE
+                    }
+                    else -> {
+                        noteInputText.visibility = View.VISIBLE
+                        view.findViewById<Button>(R.id.add_note_button).visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
         view.findViewById<Button>(R.id.add_note_button).setOnClickListener {
             addNote()
         }
@@ -57,11 +79,6 @@ class NotesDialogFragment : DialogFragment() {
             dismiss()
         }
 
-        viewModel.selectedTicketLiveData.observe(viewLifecycleOwner) { updatedTicket ->
-            updatedTicket?.ticketNotes?.let {
-                notesAdapter.updateData(it)
-            }
-        }
         return view
     }
 

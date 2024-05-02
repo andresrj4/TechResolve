@@ -3,41 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/material_name"
         android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:fontFamily="@font/inter"
         android:textColor="@color/battleship_grey"
-        android:textSize="10sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/material_quantity"
         android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:fontFamily="@font/inter"
         android:textColor="@color/battleship_grey"
-        android:textSize="10sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/material_price"
         android:layout_width="0dp"
-        android:fontFamily="@font/inter"
-        android:textColor="@color/battleship_grey"
-        android:textSize="10sp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:gravity="center"
+        android:fontFamily="@font/inter"
+        android:textColor="#3e9c35"
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/material_total"
         android:layout_width="0dp"
-        android:fontFamily="@font/inter"
-        android:textColor="@color/battleship_grey"
-        android:textSize="10sp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:gravity="center"
+        android:fontFamily="@font/inter"
+        android:textColor="#3e9c35"
+        android:textSize="11sp" />
 </LinearLayout>

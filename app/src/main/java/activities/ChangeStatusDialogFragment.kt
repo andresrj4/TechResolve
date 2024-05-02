@@ -33,7 +33,6 @@ class ChangeStatusDialogFragment : DialogFragment() {
         val changeToPendingButton = view.findViewById<Button>(R.id.change_status_dialog_to_pending_btn)
         val changeToResolvedButton = view.findViewById<Button>(R.id.change_status_dialog_to_resolved_btn)
 
-        // Display EditText for notes immediately for both buttons
         noteInput.visibility = View.VISIBLE
 
         changeToPendingButton.setOnClickListener {
@@ -60,10 +59,15 @@ class ChangeStatusDialogFragment : DialogFragment() {
     }
 
     private fun updateStatus(newStatus: TicketStatus, note: String) {
-        ticket?.let {
-            viewModel.updateTicketStatus(it.ticketID, newStatus, note)
+        ticket?.let { currentTicket ->
+            if (newStatus == TicketStatus.RESOLVED) {
+                viewModel.lockTicket(currentTicket.ticketID)
+            } else if (newStatus == TicketStatus.OPEN || newStatus == TicketStatus.IN_PROGRESS) {
+                viewModel.unlockTicket(currentTicket.ticketID)
+            }
+            viewModel.updateTicketStatus(currentTicket.ticketID, newStatus, note)
             if (newStatus == TicketStatus.PENDING) {
-                viewModel.unassignTicket(it.ticketID)
+                viewModel.unassignTicket(currentTicket.ticketID)
             }
             dismiss()
         }

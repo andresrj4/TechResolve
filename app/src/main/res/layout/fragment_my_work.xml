@@ -10,7 +10,7 @@
         android:id="@+id/employee_available_tickets_sort_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tickets Abiertos"
+        android:text="Tickets Disponibles"
         android:padding="10dp"
         android:gravity="center"
         android:fontFamily="@font/inter"
@@ -24,7 +24,8 @@
         android:id="@+id/employee_available_tickets_recycle_viewer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scrollbars="vertical"/>
 
     <!-- Expandable layout for Your Tickets -->
     <TextView
@@ -45,5 +46,6 @@
         android:id="@+id/employee_assigned_tickets_recycle_viewer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scrollbars="vertical"/>
 </LinearLayout>

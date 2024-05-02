@@ -48,7 +48,6 @@ class UserManager {
         }
     }
 
-
     private fun fetchUserRole(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
         val userRef = database.getReference("Users").child(userId)
         userRef.child("role").get().addOnSuccessListener { dataSnapshot ->

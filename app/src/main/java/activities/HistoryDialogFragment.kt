@@ -41,14 +41,12 @@ class HistoryDialogFragment : DialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = HistoryAdapter(mutableListOf())
         recyclerView.adapter = adapter
-
         arguments?.getString("ticketId")?.let { ticketId ->
             viewModel.loadHistoryForTicket(ticketId)
             viewModel.historyEntriesLiveData.observe(viewLifecycleOwner) { entries ->
                 adapter.updateData(entries)
             }
         }
-
         view.findViewById<Button>(R.id.history_dialog_close_btn).setOnClickListener {
             dismiss()
         }

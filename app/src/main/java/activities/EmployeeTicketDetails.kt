@@ -54,7 +54,6 @@ class EmployeeTicketDetails : Fragment() {
     private fun updateUI(ticket: Ticket) {
         val rootView = view ?: return
         rootView.setBackgroundResource(ticket.ticketStatus.getBackgroundResource())
-
         rootView.findViewById<TextView>(R.id.employee_ticket_details_ticketID).text = ticket.ticketID
         rootView.findViewById<TextView>(R.id.employee_ticket_details_ticket_status).apply {
             text = ticket.ticketStatus.getDisplayString()
@@ -62,12 +61,39 @@ class EmployeeTicketDetails : Fragment() {
         }
         rootView.findViewById<TextView>(R.id.employee_ticket_details_ticket_title).text = ticket.ticketTitle
         rootView.findViewById<TextView>(R.id.employee_ticket_details_ticket_description).text = ticket.ticketDescription
-
         UserManager.getInstance().fetchAndDisplayUserName(ticket.ticketClientID) { name, lastName ->
-            rootView.findViewById<TextView>(R.id.employee_ticket_details_client_assigned).text = "$name $lastName"
+            rootView.findViewById<TextView>(R.id.employee_ticket_details_client_assigned).text = "Cliente: $name $lastName"
         }
+        updateVisibilityBasedOnStatus(ticket)
+    }
 
-        setupButtonActions(ticket)
+    private fun updateVisibilityBasedOnStatus(ticket: Ticket) {
+        val rootView = view ?: return
+        val materialsButton = rootView.findViewById<Button>(R.id.employee_ticket_details_materials_btn)
+        val historyButton = rootView.findViewById<Button>(R.id.employee_ticket_details_history_btn)
+        val notesButton = rootView.findViewById<Button>(R.id.employee_ticket_details_notes_btn)
+        val statusChangeButton = rootView.findViewById<Button>(R.id.employee_ticket_change_status_btn)
+        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+        val isTicketAssignedToCurrentUser = ticket.ticketEmployeeID == currentUserID
+        materialsButton.visibility = View.VISIBLE
+        notesButton.visibility = View.VISIBLE
+        historyButton.visibility = View.VISIBLE
+        when (ticket.ticketStatus) {
+            TicketStatus.OPEN -> {
+                materialsButton.visibility = View.GONE
+                notesButton.visibility = View.GONE
+                statusChangeButton.visibility = View.GONE
+            }
+            TicketStatus.IN_PROGRESS -> {
+                statusChangeButton.visibility = if (isTicketAssignedToCurrentUser) View.VISIBLE else View.GONE
+            }
+            TicketStatus.PENDING, TicketStatus.RESOLVED, TicketStatus.CLOSED -> {
+                statusChangeButton.visibility = View.GONE
+            }
+        }
+        val claimButton = rootView.findViewById<Button>(R.id.employee_ticket_claim_btn)
+        claimButton.visibility = if (ticket.ticketStatus in listOf(TicketStatus.OPEN, TicketStatus.PENDING)
+            && ticket.ticketEmployeeID == null) View.VISIBLE else View.GONE
     }
 
     private fun setupButtonActions(ticket: Ticket) {

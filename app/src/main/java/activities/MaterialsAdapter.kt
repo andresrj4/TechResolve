@@ -12,17 +12,10 @@ class MaterialsAdapter(private val materials: MutableList<Material>) :
     RecyclerView.Adapter<MaterialsAdapter.MaterialViewHolder>() {
 
     class MaterialViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val nameTextView: TextView = view.findViewById(R.id.material_name)
-        private val quantityTextView: TextView = view.findViewById(R.id.material_quantity)
-        private val priceTextView: TextView = view.findViewById(R.id.material_price)
-        private val totalTextView: TextView = view.findViewById(R.id.material_total)
-
-        fun bind(material: Material) {
-            nameTextView.text = material.name
-            quantityTextView.text = material.quantity.toString()
-            priceTextView.text = String.format("%.2f", material.price)
-            totalTextView.text = String.format("%.2f", material.total)
-        }
+        val nameTextView: TextView = view.findViewById(R.id.material_name)
+        val quantityTextView: TextView = view.findViewById(R.id.material_quantity)
+        val priceTextView: TextView = view.findViewById(R.id.material_price)
+        val totalTextView: TextView = view.findViewById(R.id.material_total)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialViewHolder {
@@ -31,7 +24,18 @@ class MaterialsAdapter(private val materials: MutableList<Material>) :
     }
 
     override fun onBindViewHolder(holder: MaterialViewHolder, position: Int) {
-        holder.bind(materials[position])
+        val material = materials[position]
+        if (material.isTotal) {
+            holder.nameTextView.text = "Total"
+            holder.quantityTextView.text = ""
+            holder.priceTextView.text = ""
+            holder.totalTextView.text = String.format("%.2f", material.total)
+        } else {
+            holder.nameTextView.text = material.name
+            holder.quantityTextView.text = material.quantity.toString()
+            holder.priceTextView.text = String.format("%.2f", material.price)
+            holder.totalTextView.text = String.format("%.2f", material.total)
+        }
     }
 
     override fun getItemCount(): Int = materials.size
@@ -39,5 +43,11 @@ class MaterialsAdapter(private val materials: MutableList<Material>) :
     fun addMaterial(material: Material) {
         materials.add(material)
         notifyItemInserted(materials.size - 1)
+    }
+
+    fun updateMaterials(materialsList: List<Material>) {
+        materials.clear()
+        materials.addAll(materialsList)
+        notifyDataSetChanged()
     }
 }
