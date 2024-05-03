@@ -120,5 +120,8 @@ class ClientTicketDetails : Fragment() {
     private fun closeTicket(ticket: Ticket) {
         viewModel.lockTicket(ticket.ticketID)
         viewModel.updateTicketStatus(ticket.ticketID, TicketStatus.CLOSED, "Ticket closed by client")
+        ticket.ticketEmployeeID?.let { employeeId ->
+            viewModel.addNotificationForUser(employeeId, "Uno de tus tickets asignados fue cancelado.")
+        }
     }
 }

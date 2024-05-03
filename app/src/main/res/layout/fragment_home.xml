@@ -16,6 +16,7 @@
         android:textColor="@color/white"
         android:textSize="25sp"
         android:elevation="4dp"
+        android:layout_marginStart="15dp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -10,8 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sistema_de_tickets.R
 
-
-
 class ActivityLogin : AppCompatActivity() {
     private lateinit var emailInput_login: EditText
     private lateinit var passwordInput_login: EditText

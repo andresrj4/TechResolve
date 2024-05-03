@@ -8,7 +8,7 @@
     tools:context="activities.Notifications">
 
     <TextView
-        android:id="@+id/notificaciones_titulo"
+        android:id="@+id/notifications_fragment_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Notificaciones"
@@ -16,15 +16,16 @@
         android:textColor="@color/white"
         android:textSize="25sp"
         android:elevation="4dp"
+        android:layout_marginStart="15dp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificaciones_carousel"
+        android:id="@+id/notifications_recycler_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/notificaciones_titulo"/>
+        app:layout_constraintTop_toBottomOf="@id/notifications_fragment_title"/>
 
 </LinearLayout>

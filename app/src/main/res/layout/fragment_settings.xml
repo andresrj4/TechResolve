@@ -1,17 +1,109 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context="activities.Settings">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings Fragment"
+        android:text="Cambio de contraseña"
         android:textAppearance="@font/inter"
         android:textColor="@color/white"
-        android:textSize="30sp"
-        android:layout_gravity="center"/>
+        android:textSize="20sp"
+        android:elevation="4dp"
+        android:layout_marginStart="5dp"
+        android:textStyle="bold"/>
 
-</FrameLayout>
+    <TextView
+        android:layout_marginTop="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/saffron"
+        android:textAppearance="@font/inter"
+        android:textSize="14sp"
+        android:text="Contraseña actual:"/>
+
+    <EditText
+        android:id="@+id/settings_current_password"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="**********"
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:layout_marginTop="7dp"
+        android:textAppearance="@font/inter"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/saffron"
+        android:text="Nueva contraseña"/>
+
+    <EditText
+        android:id="@+id/settings_new_password"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="**********"
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:layout_marginTop="7dp"
+        android:textAppearance="@font/inter"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/saffron"
+        android:text="Confirmar contraseña"/>
+
+    <EditText
+        android:id="@+id/settings_confirm_password"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:hint="**********"
+        android:textColorHint="@color/battleship_grey"
+        android:textColor="@color/battleship_grey"
+        android:textSize="12sp"
+        android:gravity="fill_vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/saffron_underline_25dp"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/settings_change_password_btn"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cambiar contraseña"
+        android:background="@drawable/btn_saffron_outline_rounded_10"
+        android:layout_gravity="center_horizontal"
+        android:padding="15dp"
+        android:clickable="true"
+        android:textColor="@color/saffron"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

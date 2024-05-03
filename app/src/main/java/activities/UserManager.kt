@@ -1,14 +1,17 @@
 package activities
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 
 class UserManager {
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     var currentUserRole: String? = null
     var isAuthenticated = false
@@ -47,6 +50,28 @@ class UserManager {
             }
         }
     }
+    fun changePassword(currentPassword: String, newPassword: String, confirmPassword: String, callback: (Boolean, String) -> Unit) {
+        if (newPassword != confirmPassword) {
+            callback(false, "Passwords do not match.")
+            return
+        }
+        val user = FirebaseAuth.getInstance().currentUser
+        val credential = EmailAuthProvider.getCredential(user!!.email!!, currentPassword)
+
+        user.reauthenticate(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
+                    if (updateTask.isSuccessful) {
+                        callback(true, "Se actualizo la contraseña exitosamente")
+                    } else {
+                        callback(false, "Error, verifíque la información")
+                    }
+                }
+            } else {
+                callback(false, "Contraseña actual incorrecta")
+            }
+        }
+    }
 
     private fun fetchUserRole(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
         val userRef = database.getReference("Users").child(userId)
@@ -74,7 +99,6 @@ class UserManager {
                     onResult("", "")
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 onResult("", "")
             }

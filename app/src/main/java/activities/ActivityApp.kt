@@ -49,30 +49,31 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TicketViewModel::class.java)
         binding = AppMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         drawerLayout = findViewById(R.id.drawer_layout)
         addTicketBtn = findViewById(R.id.btn_add_ticket)
         toolbar = findViewById(R.id.main_toolbar)
         dotsIcon = findViewById(R.id.toolbar_dotIcon)
         menuIcon = findViewById(R.id.toolbar_menuIcon)
-
-        setContentView(binding.root)
         setSupportActionBar(toolbar)
+
         updateUserName()
         initializeUI()
         fetchUserRoleAndSetupNavigation()
 
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid
-        val navigationView : NavigationView = findViewById(R.id.nav_view)
 
+        val navigationView : NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
         ).apply {
             isDrawerIndicatorEnabled = false
             syncState()
         }
-
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
