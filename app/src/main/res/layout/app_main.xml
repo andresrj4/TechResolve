@@ -89,8 +89,8 @@
 
     <Button
         android:id="@+id/btn_add_ticket"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:text="+"
         android:textSize="35sp"
         android:textColor="@color/french_gray"

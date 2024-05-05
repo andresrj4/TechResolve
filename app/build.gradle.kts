@@ -58,4 +58,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

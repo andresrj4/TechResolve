@@ -9,10 +9,13 @@
     <color name="jet_v2">#2B2B2B</color>
     <color name="night">#161616</color>
     <color name="french_gray">#AEAEB2</color>
-    <color name="tyrian_purple">#D3136F</color>
-    <color name="british_racing_green">#0B9558</color>
-    <color name="copper">#EF831F</color>
+    <color name="dogwood_rose">#D3136F</color>
+    <color name="tyrian_purple">#6B0C3A</color>
+    <color name="castleton_green">#0B4F31</color>
+    <color name="shamrock_green">#0B9558</color>
+    <color name="ochre">#C7752A</color>
     <color name="dim_gray">#626262</color>
-    <color name="falu_red">#BC3030</color>
+    <color name="fire_engine_red">#BC3030</color>
+    <color name="falu_red">#751D1D</color>
     <color name="hyperlink_blue">#3366CC</color>
 </resources>

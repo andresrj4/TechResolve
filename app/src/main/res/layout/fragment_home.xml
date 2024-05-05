@@ -9,23 +9,45 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:id="@+id/novedades_titulo"
+        android:id="@+id/home_recently_updated_title"
         android:layout_height="wrap_content"
-        android:text="Novedades"
+        android:text="Actualizaciones recientes"
         android:textAppearance="@font/inter"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="16sp"
         android:elevation="4dp"
         android:layout_marginStart="15dp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/novedades_carousel"
+        android:id="@+id/home_recently_updated_recycler_view"
         android:layout_width="match_parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="1dp"
         android:layout_height="150dp"
-        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/home_recently_updated_title"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/novedades_titulo" />
+        app:layout_constraintTop_toBottomOf="@id/home_recently_updated_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/home_summary_title"
+        android:layout_height="wrap_content"
+        android:text="Resumen"
+        android:textAppearance="@font/inter"
+        android:textColor="@color/white"
+        android:layout_marginTop="25dp"
+        android:textSize="16sp"
+        android:elevation="4dp"
+        android:layout_marginStart="15dp"
+        android:textStyle="bold"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/home_piechart"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_marginTop="1dp" />
 
 </LinearLayout>

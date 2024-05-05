@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recently_updated_spacing">2dp</dimen>
+    <dimen name="recently_updated_recycler_item_height">130dp</dimen>
+    <dimen name="recently_updated_recycler_item_width">225dp</dimen>
+</resources>

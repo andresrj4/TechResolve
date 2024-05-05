@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/btn_saffron_outline_light_bg_rounded_10"
+    android:background="@drawable/btn_saffron_outline_light_bg_squared"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context="activities.MaterialDialogFragment">

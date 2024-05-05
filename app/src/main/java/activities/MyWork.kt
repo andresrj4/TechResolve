@@ -1,6 +1,7 @@
 package activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,8 @@ class MyWork : Fragment() {
             onItemClick = { ticket ->
             },
             onDetailsClick = { ticket ->
+                val isEmployee = UserManager.getInstance().isEmployee()
+                Log.d("RoleCheck", "Is employee: $isEmployee")
                 navigateToTicketDetail(ticket, isEmployee)
             }
         )
@@ -51,6 +54,8 @@ class MyWork : Fragment() {
             onItemClick = { ticket ->
             },
             onDetailsClick = { ticket ->
+                val isEmployee = UserManager.getInstance().isEmployee()
+                Log.d("RoleCheck", "Is employee: $isEmployee")
                 navigateToTicketDetail(ticket, isEmployee)
             }
         )

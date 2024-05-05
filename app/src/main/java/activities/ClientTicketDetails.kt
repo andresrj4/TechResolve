@@ -1,7 +1,6 @@
 package activities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.sistema_de_tickets.R
-import com.google.firebase.auth.FirebaseAuth
 import model.Ticket
 import model.TicketStatus
 
@@ -54,7 +52,7 @@ class ClientTicketDetails : Fragment() {
         rootView.findViewById<TextView>(R.id.client_ticket_details_ticketID).text = ticket.ticketID
         rootView.findViewById<TextView>(R.id.client_ticket_details_ticket_status).apply {
             text = ticket.ticketStatus.getDisplayString()
-            setTextColor(ContextCompat.getColor(requireContext(), ticket.ticketStatus.getColor()))
+            setTextColor(ContextCompat.getColor(requireContext(), ticket.ticketStatus.getColorForText()))
         }
         rootView.findViewById<TextView>(R.id.client_ticket_details_ticket_title).text = ticket.ticketTitle
         rootView.findViewById<TextView>(R.id.client_ticket_details_ticket_description).text = ticket.ticketDescription

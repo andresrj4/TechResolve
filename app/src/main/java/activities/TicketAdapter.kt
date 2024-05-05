@@ -24,7 +24,7 @@ class TicketAdapter(
         fun bind(ticket: Ticket, clickListener: (Ticket) -> Unit, detailsClickListener: (Ticket) -> Unit) {
             titleTextView.text = ticket.ticketTitle
             statusTextView.text = ticket.ticketStatus.getDisplayString()
-            val colorId = ticket.ticketStatus.getColor()
+            val colorId = ticket.ticketStatus.getColorForText()
             statusTextView.setTextColor(ContextCompat.getColor(view.context, colorId))
 
             itemView.setOnClickListener { clickListener(ticket) }

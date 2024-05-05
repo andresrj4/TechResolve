@@ -1,17 +1,16 @@
 package activities
 
+import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
 
 class UserManager {
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance()
-    private val db = FirebaseFirestore.getInstance()
 
     var currentUserRole: String? = null
     var isAuthenticated = false
@@ -73,12 +72,14 @@ class UserManager {
         }
     }
 
-    private fun fetchUserRole(userId: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+    fun fetchUserRole(userId: String, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
         val userRef = database.getReference("Users").child(userId)
         userRef.child("role").get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
-                currentUserRole = dataSnapshot.value as String?
-                onSuccess()
+                val role = dataSnapshot.value as String
+                currentUserRole = role // Ensure this is being set
+                Log.d("UserManager", "Role fetched and set: $role")
+                onSuccess(role)
             } else {
                 onFailure()
             }
@@ -105,7 +106,7 @@ class UserManager {
         })
     }
 
-    private fun saveUserDetails(userId: String, name: String, lastName: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+    fun saveUserDetails(userId: String, name: String, lastName: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
         val userRef = database.getReference("Users").child(userId)
         val userDetails = mapOf("name" to name, "lastName" to lastName)
         userRef.setValue(userDetails).addOnCompleteListener { task ->

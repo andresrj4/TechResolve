@@ -6,16 +6,15 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import model.Ticket
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import model.HistoryEntry
 import model.Material
 import model.Notification
+import model.RecentUpdatesTickets
 import model.TicketStatus
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,6 +26,9 @@ class TicketViewModel : ViewModel() {
     val selectedTicketLiveData = MutableLiveData<Ticket>()
     val historyEntriesLiveData = MutableLiveData<List<HistoryEntry>>()
     val notificationLiveData: MutableLiveData<List<Notification>> = MutableLiveData()
+    val ticketStatusCountLiveData = MutableLiveData<Map<TicketStatus, Int>>()
+    val recentlyUpdatedTicketsLiveData = MutableLiveData<List<RecentUpdatesTickets>>()
+    private val recentUpdates = mutableMapOf<String, RecentUpdatesTickets>()
     private fun getCurrentUserName(): String = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
 
     enum class SortBy {
@@ -54,6 +56,82 @@ class TicketViewModel : ViewModel() {
                 }
                 ticketsLiveData.postValue(ticketsList)
             }
+    }
+
+    fun updateRecentTicketActivity(ticketId: String, ticketTitle: String, message: String, ticketStatus: TicketStatus) {
+        val currentTime = System.currentTimeMillis()
+        val update = RecentUpdatesTickets(ticketId, ticketTitle, message, currentTime, ticketStatus)
+        recentUpdates[ticketId] = update
+        val sortedUpdates = recentUpdates.values.sortedByDescending { it.timestamp }.take(5).toList()
+        recentlyUpdatedTicketsLiveData.postValue(sortedUpdates)
+    }
+
+    fun fetchRecentlyUpdatedTickets(userId: String, userRole: String) {
+        val query = when (userRole) {
+            "Empleado" -> db.collection("Tickets")
+                .whereEqualTo("ticketEmployeeID", userId)
+                .whereIn("ticketStatus", listOf(TicketStatus.CLOSED.name, TicketStatus.OPEN.name))
+            "Cliente" -> db.collection("Tickets")
+                .whereEqualTo("ticketClientID", userId)
+            else -> return
+        }
+        query.orderBy("ticketDateCreated", Query.Direction.DESCENDING)
+            .limit(5)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+                val updates = snapshots?.documents?.mapNotNull { doc ->
+                    doc.toObject(Ticket::class.java)?.let { ticket ->
+                        RecentUpdatesTickets(
+                            ticketId = ticket.ticketID,
+                            ticketTitle = ticket.ticketTitle,
+                            updateMessage = recentUpdates[ticket.ticketID]?.updateMessage ?: "Detailed update unavailable",
+                            timestamp = ticket.ticketHistory.maxByOrNull { it.timestamp }?.timestamp ?: System.currentTimeMillis(),
+                            ticketStatus = ticket.ticketStatus
+                        )
+                    }
+                }?.filterNotNull() ?: emptyList()
+                recentlyUpdatedTicketsLiveData.postValue(updates)
+            }
+    }
+
+    fun fetchTicketCountsByStatusForClient(clientId: String) {
+        db.collection("Tickets")
+            .whereEqualTo("ticketClientID", clientId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val statusCountMap = processQuerySnapshot(querySnapshot)
+                ticketStatusCountLiveData.postValue(statusCountMap)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error fetching client ticket counts by status", e)
+            }
+    }
+
+    fun fetchTicketCountsByStatusForEmployee(employeeId: String) {
+        db.collection("Tickets")
+            .whereEqualTo("ticketEmployeeID", employeeId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val statusCountMap = processQuerySnapshot(querySnapshot)
+                ticketStatusCountLiveData.postValue(statusCountMap)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error fetching employee ticket counts by status", e)
+            }
+    }
+
+    private fun processQuerySnapshot(querySnapshot: QuerySnapshot): Map<TicketStatus, Int> {
+        return querySnapshot.documents.mapNotNull { document ->
+            document.toObject(Ticket::class.java)?.ticketStatus?.let { status ->
+                status to document
+            }
+        }.groupBy(
+            keySelector = { it.first },
+            valueTransform = { it.second }
+        ).mapValues { (_, tickets) -> tickets.size }
     }
 
     private fun addHistoryEntry(ticketId: String, action: String) {
@@ -150,26 +228,27 @@ class TicketViewModel : ViewModel() {
 
     fun claimTicket(ticket: Ticket) {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return
-            val updates = mapOf(
-                "ticketStatus" to TicketStatus.IN_PROGRESS.name,
-                "ticketEmployeeID" to currentUser.uid
-            )
-            db.collection("Tickets").document(ticket.ticketID)
-                .update(updates)
-                .addOnSuccessListener {
-                    val updatedTicket = ticket.copy(
-                        ticketStatus = TicketStatus.IN_PROGRESS,
-                        ticketEmployeeID = currentUser.uid
-                    )
-                    selectedTicketLiveData.postValue(updatedTicket)
-                    addHistoryEntry(ticket.ticketID, "Ticket fue asignado.")
-                    if (ticket.ticketClientID != currentUser.uid) {
-                        addNotificationForUser(ticket.ticketClientID, "Un empleado ha tomado el ticket: '${ticket.ticketTitle}'")
-                    }
+        val updates = mapOf(
+            "ticketStatus" to TicketStatus.IN_PROGRESS.name,
+            "ticketEmployeeID" to currentUser.uid
+        )
+        db.collection("Tickets").document(ticket.ticketID)
+            .update(updates)
+            .addOnSuccessListener {
+                val updatedTicket = ticket.copy(
+                    ticketStatus = TicketStatus.IN_PROGRESS,
+                    ticketEmployeeID = currentUser.uid
+                )
+                selectedTicketLiveData.postValue(updatedTicket)
+                addHistoryEntry(ticket.ticketID, "Ticket fue asignado.")
+                if (ticket.ticketClientID != currentUser.uid) {
+                    addNotificationForUser(ticket.ticketClientID, "Un empleado ha tomado el ticket: '${ticket.ticketTitle}'")
+                    updateRecentTicketActivity(ticket.ticketID, ticket.ticketTitle, "~ Reclamado", TicketStatus.IN_PROGRESS)
                 }
-                .addOnFailureListener { e ->
-                    Log.e(TAG, "Failed to claim ticket: ", e)
-                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to claim ticket: ", e)
+            }
     }
 
     fun loadClientTickets(clientId: String, sortBy: SortBy, source: Source = Source.CACHE) {
@@ -204,6 +283,7 @@ class TicketViewModel : ViewModel() {
                     ticket?.let {
                         if (it.ticketClientID != FirebaseAuth.getInstance().currentUser?.uid) {
                             addNotificationForUser(it.ticketClientID, "Material nuevo fue usado en el ticket: '${it.ticketTitle}'.")
+                            updateRecentTicketActivity(it.ticketID, it.ticketTitle, "+ Material", it.ticketStatus)
                         }
                     }
                 }
@@ -246,6 +326,7 @@ class TicketViewModel : ViewModel() {
                     selectedTicketLiveData.postValue(updatedTicket)
                     addHistoryEntry(ticketId, "Cambio de estado a '${newStatus.getDisplayString()}', nota añadida: '$note'")
                     addNotificationForUser(currentTicket.ticketClientID, "El estado de tu ticket ha cambiado a '${newStatus.getDisplayString()}'.")
+                    updateRecentTicketActivity(currentTicket.ticketClientID, currentTicket.ticketTitle, "~ Cambio de estado", newStatus)
                 }
             }
             .addOnFailureListener { e ->
