@@ -19,7 +19,7 @@ class Tickets : Fragment() {
     private lateinit var ticketsAdapter: TicketAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: TicketViewModel
-    private var currentSort = TicketViewModel.SortBy.DATE
+    private var currentSort = TicketViewModel.SortBy.DATE_CREATED
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tickets, container, false)
@@ -35,17 +35,23 @@ class Tickets : Fragment() {
                 navigateToTicketDetail(ticket, isEmployee)
             }
         )
-        recyclerView.adapter = ticketsAdapter
 
+        recyclerView.adapter = ticketsAdapter
         setupViewModel()
+
+        val sortHeader = view.findViewById<TextView>(R.id.client_sort_header)
+        sortHeader.setOnClickListener {
+            toggleSortOrder()
+        }
+
         return view
     }
 
     private fun toggleSortOrder() {
-        currentSort = if (currentSort == TicketViewModel.SortBy.DATE) {
-            TicketViewModel.SortBy.STATUS
-        } else {
-            TicketViewModel.SortBy.DATE
+        currentSort = when (currentSort) {
+            TicketViewModel.SortBy.DATE_CREATED -> TicketViewModel.SortBy.LAST_UPDATED
+            TicketViewModel.SortBy.LAST_UPDATED -> TicketViewModel.SortBy.STATUS
+            TicketViewModel.SortBy.STATUS -> TicketViewModel.SortBy.DATE_CREATED
         }
         viewModel.loadClientTickets(FirebaseAuth.getInstance().currentUser?.uid ?: "", currentSort)
         updateSortHeader()
@@ -53,19 +59,20 @@ class Tickets : Fragment() {
 
     private fun updateSortHeader() {
         val headerView = view?.findViewById<TextView>(R.id.client_sort_header)
-        headerView?.text = if (currentSort == TicketViewModel.SortBy.DATE) "Sort by Date" else "Sort by Status"
+        headerView?.text = when (currentSort) {
+            TicketViewModel.SortBy.DATE_CREATED -> "Fecha"
+            TicketViewModel.SortBy.LAST_UPDATED -> "Ultima actualización"
+            TicketViewModel.SortBy.STATUS -> "Estado"
+        }
     }
 
     private fun setupViewModel() {
         viewModel = ViewModelProvider(requireActivity()).get(TicketViewModel::class.java)
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-        viewModel.loadClientTickets(userId, currentSort, Source.SERVER)  // Fetch from server to ensure data is fresh
+        viewModel.loadClientTickets(userId, currentSort, Source.SERVER)
         viewModel.ticketsLiveData.observe(viewLifecycleOwner) { tickets ->
             val mutableTickets = tickets.toMutableList()
-            ticketsAdapter.updateData(mutableTickets)  // Update the data in the existing adapter
-            if (tickets.isEmpty()) {
-                Toast.makeText(context, "No tickets available", Toast.LENGTH_SHORT).show()
-            }
+            ticketsAdapter.updateData(mutableTickets)
         }
     }
 

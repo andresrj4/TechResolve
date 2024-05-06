@@ -107,7 +107,7 @@ class ClientTicketDetails : Fragment() {
     private fun showConfirmationDialog(ticket: Ticket) {
         ConfirmationDialog.newInstance(
             title = "Cerrar Ticket",
-            message = "¿Está seguro de que desea cerrar este ticket?",
+            message = "¿Está seguro que desea cerrar este ticket?",
             positiveButtonText = "Sí",
             negativeButtonText = "No",
             onConfirm = { closeTicket(ticket) },
@@ -120,6 +120,7 @@ class ClientTicketDetails : Fragment() {
         viewModel.updateTicketStatus(ticket.ticketID, TicketStatus.CLOSED, "Ticket closed by client")
         ticket.ticketEmployeeID?.let { employeeId ->
             viewModel.addNotificationForUser(employeeId, "Uno de tus tickets asignados fue cancelado.")
+            viewModel.updateRecentTicketActivity(ticket.ticketID, ticket.ticketTitle, "Ticket cerrado por el cliente", TicketStatus.CLOSED, "Empleado")
         }
     }
 }

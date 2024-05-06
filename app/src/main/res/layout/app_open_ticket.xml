@@ -80,6 +80,7 @@
         android:textSize="12sp"
         android:gravity="fill_vertical"
         android:paddingTop="11dp"
+        android:inputType="textMultiLine"
         android:background="@drawable/saffron_underline_25dp"
         android:id="@+id/ticket_title_editbox"/>
 
@@ -119,6 +120,7 @@
         android:gravity="fill_vertical"
         android:paddingTop="11dp"
         android:background="@drawable/saffron_underline_25dp"
+        android:inputType="textMultiLine"
         android:id="@+id/ticket_desc_editbox"/>
 
     <LinearLayout

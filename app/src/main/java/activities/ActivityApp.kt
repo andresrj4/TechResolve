@@ -59,6 +59,7 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
         setSupportActionBar(toolbar)
 
         updateUserName()
+        updateUserRole()
         initializeUI()
         fetchUserRoleAndSetupNavigation()
 
@@ -175,6 +176,27 @@ class ActivityApp : AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("Firebase", "Failed to fetch user role", error.toException())
+                }
+            })
+        }
+    }
+
+    private fun updateUserRole() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val database = FirebaseDatabase.getInstance()
+            val userRef = database.getReference("Users").child(userId)
+            userRef.child("role").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val role = snapshot.value.toString()
+                        val roleTextView = findViewById<TextView>(R.id.app_role_textview)
+                        roleTextView.text = role
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w(TAG, "loadUserRole:onCancelled", error.toException())
                 }
             })
         }

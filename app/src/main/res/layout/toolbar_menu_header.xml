@@ -12,8 +12,11 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
+        android:id="@+id/app_role_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="14sp"
         android:text="Usuario"
         android:textColor="@color/white"
         android:textStyle="bold"/>
@@ -21,6 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Bienvenido"
         android:textColor="@color/white"
         android:textSize="14sp"

@@ -14,11 +14,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="45dp"
-            android:fontFamily="@font/inter"
-            android:text="@string/login_title"
+            android:paddingTop="35dp"
+            android:paddingBottom="6dp"
+            android:fontFamily="@font/maven_pro_bold"
+            android:text="ACCESO"
             android:textColor="@color/white"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textAlignment="center" />
 
         <TextView
@@ -99,7 +100,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/login_signup_link_clickable"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textAlignment="center"
             android:clickable="true"
             android:id="@+id/login_signup_link_text"/>

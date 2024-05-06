@@ -8,7 +8,6 @@
     android:gravity="center_horizontal">
 
     <TextView
-        android:id="@+id/textViewTitle"
         android:fontFamily="@font/inter"
         android:textColor="@color/saffron"
         android:textStyle="bold"

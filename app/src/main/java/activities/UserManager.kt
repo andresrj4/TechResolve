@@ -3,6 +3,7 @@ package activities
 import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -16,15 +17,16 @@ class UserManager {
     var isAuthenticated = false
         private set
 
-    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun loginUser(email: String, password: String, onSuccess: (FirebaseUser) -> Unit, onFailure: (String) -> Unit) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 isAuthenticated = true
-                fetchUserRole(auth.currentUser?.uid ?: "", {
-                    onSuccess()
-                }, {
-                    onFailure("Failed to fetch user role.")
-                })
+                val user = auth.currentUser
+                if (user != null) {
+                    onSuccess(user)
+                } else {
+                    onFailure("User is null after successful authentication.")
+                }
             } else {
                 onFailure(task.exception?.message ?: "Authentication failed.")
             }
@@ -49,6 +51,7 @@ class UserManager {
             }
         }
     }
+
     fun changePassword(currentPassword: String, newPassword: String, confirmPassword: String, callback: (Boolean, String) -> Unit) {
         if (newPassword != confirmPassword) {
             callback(false, "Passwords do not match.")
@@ -77,7 +80,7 @@ class UserManager {
         userRef.child("role").get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
                 val role = dataSnapshot.value as String
-                currentUserRole = role // Ensure this is being set
+                currentUserRole = role
                 Log.d("UserManager", "Role fetched and set: $role")
                 onSuccess(role)
             } else {
@@ -111,18 +114,6 @@ class UserManager {
         val userDetails = mapOf("name" to name, "lastName" to lastName)
         userRef.setValue(userDetails).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                onSuccess()
-            } else {
-                onFailure()
-            }
-        }
-    }
-
-    fun saveUserRole(userId: String, role: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        val userRef = database.getReference("Users").child(userId)
-        userRef.child("role").setValue(role).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                currentUserRole = role
                 onSuccess()
             } else {
                 onFailure()

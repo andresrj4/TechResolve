@@ -1,6 +1,6 @@
 <resources>
     <!-- App Strings -->
-    <string name="app_name">Sistema de Tickets</string>
+    <string name="app_name">TechResolve</string>
 
     <!-- Titles -->
     <string name="login_title">Acceso</string>

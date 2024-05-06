@@ -10,17 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"
         tools:ignore="UselessParent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
-            android:fontFamily="@font/inter"
-            android:text="@string/signup_title"
+            android:paddingTop="15dp"
+            android:paddingBottom="6dp"
+            android:fontFamily="@font/maven_pro_bold"
+            android:text="REGISTRO"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textAlignment="center" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_name"
             android:textColor="@color/saffron"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:layout_marginTop="16dp" />
 
         <EditText
@@ -39,12 +39,12 @@
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:gravity="fill_vertical"
             android:inputType="text"
             android:hint="@string/name_hint"
             android:drawablePadding="8dp"
-            android:padding="12dp"
+            android:paddingTop="11dp"
             android:background="@drawable/saffron_underline_25dp"
             android:autofillHints="" />
 
@@ -54,7 +54,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_last_name"
             android:textColor="@color/saffron"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:layout_marginTop="16dp" />
 
         <EditText
@@ -64,12 +64,12 @@
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:gravity="fill_vertical"
             android:inputType="text"
             android:hint="@string/last_name_hint"
             android:drawablePadding="8dp"
-            android:padding="12dp"
+            android:paddingTop="11dp"
             android:background="@drawable/saffron_underline_25dp"
             android:autofillHints="" />
 
@@ -79,7 +79,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_email"
             android:textColor="@color/saffron"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:layout_marginTop="16dp" />
 
         <EditText
@@ -89,7 +89,7 @@
             android:fontFamily="@font/inter"
             android:textColorHint="@color/battleship_grey"
             android:textColor="@color/battleship_grey"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:gravity="fill_vertical"
             android:paddingTop="11dp"
             android:background="@drawable/saffron_underline_25dp"
@@ -106,7 +106,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_password"
             android:textColor="@color/saffron"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:layout_marginTop="16dp" />
 
         <EditText
@@ -117,13 +117,13 @@
             android:background="@drawable/saffron_underline_25dp"
             android:drawablePadding="8dp"
             android:fontFamily="@font/inter"
-            android:gravity="fill_vertical"
             android:hint="@string/password_hint"
             android:inputType="textPassword"
-            android:paddingTop="11dp"
-            android:textColor="@color/battleship_grey"
             android:textColorHint="@color/battleship_grey"
-            android:textSize="16sp"
+            android:textColor="@color/battleship_grey"
+            android:textSize="11sp"
+            android:gravity="fill_vertical"
+            android:paddingTop="11dp"
             tools:ignore="TextFields" />
 
         <TextView
@@ -132,7 +132,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_confirm_password"
             android:textColor="@color/saffron"
-            android:textSize="16sp"
+            android:textSize="11sp"
             android:layout_marginTop="16dp" />
 
         <EditText
@@ -146,10 +146,10 @@
             android:gravity="fill_vertical"
             android:hint="@string/password_confirm_hint"
             android:inputType="textPassword"
-            android:paddingTop="12dp"
+            android:paddingTop="11dp"
             android:textColor="@color/battleship_grey"
             android:textColorHint="@color/battleship_grey"
-            android:textSize="16sp"
+            android:textSize="11sp"
             tools:ignore="TextFields" />
 
         <Button
@@ -193,7 +193,7 @@
             android:fontFamily="@font/inter"
             android:text="@string/signup_login_link_clickable"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textAlignment="center"
             android:clickable="true"
             android:id="@+id/signup_login_link_text" />

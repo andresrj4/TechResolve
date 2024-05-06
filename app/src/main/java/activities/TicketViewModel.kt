@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
+import io.grpc.Context
 import model.HistoryEntry
 import model.Material
 import model.Notification
@@ -30,9 +31,11 @@ class TicketViewModel : ViewModel() {
     val recentlyUpdatedTicketsLiveData = MutableLiveData<List<RecentUpdatesTickets>>()
     private val recentUpdates = mutableMapOf<String, RecentUpdatesTickets>()
     private fun getCurrentUserName(): String = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
+    private var userRole: String = "Unknown"
 
     enum class SortBy {
-        DATE,
+        DATE_CREATED,
+        LAST_UPDATED,
         STATUS
     }
 
@@ -58,24 +61,36 @@ class TicketViewModel : ViewModel() {
             }
     }
 
-    fun updateRecentTicketActivity(ticketId: String, ticketTitle: String, message: String, ticketStatus: TicketStatus) {
-        val currentTime = System.currentTimeMillis()
-        val update = RecentUpdatesTickets(ticketId, ticketTitle, message, currentTime, ticketStatus)
-        recentUpdates[ticketId] = update
-        val sortedUpdates = recentUpdates.values.sortedByDescending { it.timestamp }.take(5).toList()
-        recentlyUpdatedTicketsLiveData.postValue(sortedUpdates)
+    fun setUserRole(role: String) {
+        this.userRole = role
+    }
+
+    fun getCurrentUserRole(): String {
+        return userRole
+    }
+
+    fun updateRecentTicketActivity(ticketId: String, ticketTitle: String, message: String, ticketStatus: TicketStatus, intendedFor: String) {
+        val currentUserRole = getCurrentUserRole()
+        if (currentUserRole == intendedFor) {
+            val currentTime = System.currentTimeMillis()
+            val update = RecentUpdatesTickets(ticketId, ticketTitle, message, currentTime, ticketStatus)
+            recentUpdates[ticketId] = update
+            val sortedUpdates = recentUpdates.values.sortedByDescending { it.timestamp }.take(5).toList()
+            recentlyUpdatedTicketsLiveData.postValue(sortedUpdates)
+        }
     }
 
     fun fetchRecentlyUpdatedTickets(userId: String, userRole: String) {
         val query = when (userRole) {
             "Empleado" -> db.collection("Tickets")
                 .whereEqualTo("ticketEmployeeID", userId)
-                .whereIn("ticketStatus", listOf(TicketStatus.CLOSED.name, TicketStatus.OPEN.name))
+                .whereIn("ticketStatus", listOf(TicketStatus.CLOSED.name))
             "Cliente" -> db.collection("Tickets")
                 .whereEqualTo("ticketClientID", userId)
+                .whereIn("ticketStatus", listOf(TicketStatus.OPEN.name, TicketStatus.PENDING.name, TicketStatus.IN_PROGRESS.name, TicketStatus.RESOLVED.name))
             else -> return
         }
-        query.orderBy("ticketDateCreated", Query.Direction.DESCENDING)
+        query.orderBy("lastUpdated", Query.Direction.DESCENDING)
             .limit(5)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
@@ -87,8 +102,8 @@ class TicketViewModel : ViewModel() {
                         RecentUpdatesTickets(
                             ticketId = ticket.ticketID,
                             ticketTitle = ticket.ticketTitle,
-                            updateMessage = recentUpdates[ticket.ticketID]?.updateMessage ?: "Detailed update unavailable",
-                            timestamp = ticket.ticketHistory.maxByOrNull { it.timestamp }?.timestamp ?: System.currentTimeMillis(),
+                            updateMessage = recentUpdates[ticket.ticketID]?.updateMessage ?: "Detalle no disponible",
+                            timestamp = recentUpdates[ticket.ticketID]?.timestamp ?: ticket.lastUpdated,
                             ticketStatus = ticket.ticketStatus
                         )
                     }
@@ -214,7 +229,8 @@ class TicketViewModel : ViewModel() {
             ticketStatus = TicketStatus.OPEN,
             ticketNotes = mutableListOf(),
             ticketMaterialsUsed = mutableListOf(),
-            ticketHistory = mutableListOf()
+            ticketHistory = mutableListOf(),
+            lastUpdated = System.currentTimeMillis()
         )
         ticketRef.set(ticket)
             .addOnSuccessListener {
@@ -230,7 +246,8 @@ class TicketViewModel : ViewModel() {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return
         val updates = mapOf(
             "ticketStatus" to TicketStatus.IN_PROGRESS.name,
-            "ticketEmployeeID" to currentUser.uid
+            "ticketEmployeeID" to currentUser.uid,
+            "lastUpdated" to System.currentTimeMillis()
         )
         db.collection("Tickets").document(ticket.ticketID)
             .update(updates)
@@ -243,7 +260,7 @@ class TicketViewModel : ViewModel() {
                 addHistoryEntry(ticket.ticketID, "Ticket fue asignado.")
                 if (ticket.ticketClientID != currentUser.uid) {
                     addNotificationForUser(ticket.ticketClientID, "Un empleado ha tomado el ticket: '${ticket.ticketTitle}'")
-                    updateRecentTicketActivity(ticket.ticketID, ticket.ticketTitle, "~ Reclamado", TicketStatus.IN_PROGRESS)
+                    updateRecentTicketActivity(ticket.ticketID, ticket.ticketTitle, "~ Reclamado", TicketStatus.IN_PROGRESS, "Cliente")
                 }
             }
             .addOnFailureListener { e ->
@@ -255,9 +272,11 @@ class TicketViewModel : ViewModel() {
         val query = db.collection("Tickets")
             .whereEqualTo("ticketClientID", clientId)
             .orderBy(when (sortBy) {
-                SortBy.DATE -> "ticketDateCreated"
+                SortBy.DATE_CREATED -> "ticketDateCreated"
+                SortBy.LAST_UPDATED -> "lastUpdated"
                 SortBy.STATUS -> "ticketStatus"
             }, Query.Direction.DESCENDING)
+
         query.get(source)
             .addOnSuccessListener { snapshots ->
                 val ticketsList = ArrayList<Ticket>()
@@ -274,8 +293,12 @@ class TicketViewModel : ViewModel() {
     }
 
     fun addMaterialToTicket(ticketId: String, material: Material) {
+        val updates = mapOf(
+            "ticketMaterialsUsed" to FieldValue.arrayUnion(material),
+            "lastUpdated" to System.currentTimeMillis()
+        )
         db.collection("Tickets").document(ticketId)
-            .update("ticketMaterialsUsed", FieldValue.arrayUnion(material))
+            .update(updates)
             .addOnSuccessListener {
                 addHistoryEntry(ticketId, "Material añadido: ${material.name}, Cantidad: ${material.quantity}, Precio: ${material.price}.")
                 db.collection("Tickets").document(ticketId).get().addOnSuccessListener { document ->
@@ -283,7 +306,7 @@ class TicketViewModel : ViewModel() {
                     ticket?.let {
                         if (it.ticketClientID != FirebaseAuth.getInstance().currentUser?.uid) {
                             addNotificationForUser(it.ticketClientID, "Material nuevo fue usado en el ticket: '${it.ticketTitle}'.")
-                            updateRecentTicketActivity(it.ticketID, it.ticketTitle, "+ Material", it.ticketStatus)
+                            updateRecentTicketActivity(it.ticketID, it.ticketTitle, "+ Material", it.ticketStatus, "Cliente")
                         }
                     }
                 }
@@ -294,8 +317,12 @@ class TicketViewModel : ViewModel() {
     }
 
     fun addNoteToTicket(ticketId: String, noteText: String) {
+        val updates = mapOf(
+            "ticketNotes" to FieldValue.arrayUnion(noteText),
+            "lastUpdated" to System.currentTimeMillis()
+        )
         db.collection("Tickets").document(ticketId)
-            .update("ticketNotes", FieldValue.arrayUnion(noteText))
+            .update(updates)
             .addOnSuccessListener {
                 selectedTicketLiveData.value?.let { currentTicket ->
                     val updatedNotes = currentTicket.ticketNotes.toMutableList()
@@ -313,7 +340,8 @@ class TicketViewModel : ViewModel() {
     fun updateTicketStatus(ticketId: String, newStatus: TicketStatus, note: String) {
         val updates = hashMapOf<String, Any>(
             "ticketStatus" to newStatus.name,
-            "ticketNotes" to FieldValue.arrayUnion(note)
+            "ticketNotes" to FieldValue.arrayUnion(note),
+            "lastUpdated" to System.currentTimeMillis()
         )
         db.collection("Tickets").document(ticketId)
             .update(updates)
@@ -325,8 +353,7 @@ class TicketViewModel : ViewModel() {
                     )
                     selectedTicketLiveData.postValue(updatedTicket)
                     addHistoryEntry(ticketId, "Cambio de estado a '${newStatus.getDisplayString()}', nota añadida: '$note'")
-                    addNotificationForUser(currentTicket.ticketClientID, "El estado de tu ticket ha cambiado a '${newStatus.getDisplayString()}'.")
-                    updateRecentTicketActivity(currentTicket.ticketClientID, currentTicket.ticketTitle, "~ Cambio de estado", newStatus)
+                    updateRecentTicketActivity(currentTicket.ticketClientID, currentTicket.ticketTitle, "~ Cambio de estado", newStatus, "Cliente")
                 }
             }
             .addOnFailureListener { e ->
@@ -335,8 +362,12 @@ class TicketViewModel : ViewModel() {
     }
 
     fun unassignTicket(ticketId: String) {
+        val updates = mapOf(
+            "ticketEmployeeID" to null,
+            "lastUpdated" to System.currentTimeMillis()
+        )
         db.collection("Tickets").document(ticketId)
-            .update("ticketEmployeeID", null)
+            .update(updates)
             .addOnSuccessListener {
                 addHistoryEntry(ticketId, "Empleado se dio de baja del ticket.")
             }

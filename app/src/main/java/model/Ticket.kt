@@ -18,7 +18,8 @@ data class Ticket(
     val ticketNotes: MutableList<String> = mutableListOf(),
     val ticketMaterialsUsed: MutableList<Material> = mutableListOf(),
     val ticketHistory: MutableList<HistoryEntry> = mutableListOf(),
-    var isLocked: Boolean = false
+    var isLocked: Boolean = false,
+    var lastUpdated: Long = System.currentTimeMillis()
 ) : Serializable
 
 data class Material(

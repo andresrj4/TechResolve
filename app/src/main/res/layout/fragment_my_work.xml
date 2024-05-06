@@ -5,7 +5,6 @@
     android:orientation="vertical"
     tools:context="activities.MyWork">
 
-    <!-- Expandable layout for Open Tickets -->
     <TextView
         android:id="@+id/employee_available_tickets_sort_header"
         android:layout_width="match_parent"
@@ -27,7 +26,7 @@
         android:layout_weight="1"
         android:scrollbars="vertical"/>
 
-    <!-- Expandable layout for Your Tickets -->
+
     <TextView
         android:id="@+id/employee_assigned_tickets_sort_header"
         android:layout_width="match_parent"

@@ -40,7 +40,7 @@ class NotificationAdapter(private var notifications: List<Notification>, private
     }
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        holder.bind(notifications[position], userId)  // Pass userId here
+        holder.bind(notifications[position], userId)
     }
 
     fun updateData(newNotifications: List<Notification>) {
