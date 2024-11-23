@@ -1,1 +1,43 @@
+name: CI/CD Pipeline
 
+# Activadores: El pipeline se ejecutará en cada push o pull request en la rama main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # Máquina virtual Linux para ejecutar los comandos
+
+    steps:
+    # 1. Descargar el código fuente del repositorio
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 2. Configurar el entorno para Kotlin/Gradle
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'  # Cambiar si tu proyecto usa otra versión
+        distribution: 'temurin'
+
+    # 3. Cachear las dependencias de Gradle para acelerar el pipeline
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-
+
+    # 4. Construir el proyecto con Gradle
+    - name: Build the project
+      run: ./gradlew build
+
+    # 5. Ejecutar las pruebas unitarias
+    - name: Run tests
+      run: ./gradlew test
