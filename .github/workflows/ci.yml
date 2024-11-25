@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - prueba_fusion
+      - test
+  pull_request:
+    branches:
+      - master
+      - prueba_fusion
+      - test
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-
+
+    # Conceder permisos al archivo gradlew
+    - name: Grant execute permission for Gradle wrapper
+      run: chmod +x ./gradlew
+
+    - name: Build the app
+      run: ./gradlew build
+
+    - name: Run tests
+      run: ./gradlew test
